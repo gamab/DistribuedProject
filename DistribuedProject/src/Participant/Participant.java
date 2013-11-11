@@ -89,4 +89,16 @@ public class Participant {
 			}
 			return result;
 	}
+	
+	//return true if the participant has the asking resource 
+	public boolean hasTheResource(String resource) {
+		boolean result = false;
+		for (int i = 0; i < resourcesList.size(); i++){
+			if (resource.equals(resourcesList.get(i))){
+				result = true;
+			}
+		}
+		return result;
+	}
+	
 }
