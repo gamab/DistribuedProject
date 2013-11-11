@@ -16,11 +16,12 @@ public class ServiceThread extends Thread {
 	private LogicalClock clock;
 	
 	public ServiceThread(DatagramSocket serviceSocket, CRWaitingList crWaitingList,
-			ParticipantList participants, int pid, LogicalClock clock) {
+			String[] resources,ParticipantList participants, int pid,
+			LogicalClock clock) {
 		super();
 		this.serviceSocket = serviceSocket;
-		this.participants = participants;
 		this.crWaitingList = crWaitingList;
+		this.resources = resources;
 		this.participants = participants;
 		this.pid = pid;
 		this.clock = clock;
