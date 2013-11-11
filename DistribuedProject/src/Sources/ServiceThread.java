@@ -1,12 +1,11 @@
 package Sources;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 
 import CriticalResources.CRWaitingList;
 import CriticalResources.CRWaitingListCell;
+import DatagramCommunication.DatagramCommunication;
+import DatagramCommunication.CommunicationMessage;
 import Participant.Participant;
 import Participant.ParticipantList;
 
@@ -33,6 +32,13 @@ public class ServiceThread extends Thread {
 	
 	public void run() {
 		
+		CommunicationMessage request = new CommunicationMessage();
+		String answer = new String();
+		while(true) {
+			request = DatagramCommunication.retrieveMessage(serviceSocket);
+			answer = treatRequest(request.getMessage());
+			DatagramCommunication.sendMessage(answer,serviceSocket,request.getIpOrigin(),request.getPortOrigin());
+		}
 	}
 	
 	// In function of the request we received we are returning an answer thanks to the protocol we made
@@ -119,10 +125,5 @@ public class ServiceThread extends Thread {
 		return answer;
 	}
 	
-	private void sendAnswer(String answer, InetAddress ip, Integer port) throws IOException {
-		byte[] bytesToSend = answer.getBytes();
-		DatagramPacket packet = new DatagramPacket(bytesToSend, bytesToSend.length, ip, port);
-		serviceSocket.send(packet);
-	}
 	
 }
