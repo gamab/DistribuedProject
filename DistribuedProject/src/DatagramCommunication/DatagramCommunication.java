@@ -71,9 +71,27 @@ public class DatagramCommunication {
 				receivedEverything = true;
 			}
 		}
-		
+		String messageNormalized = normalize(message.getMessage());
+		message.setMessage(messageNormalized);
 		return message;
 	}
 	
+	private static String normalize(String message) {
+		byte[] messageB = message.getBytes();
+		boolean zerosFound = false;
+		int size = 0;
+		for (int i=0; i<messageB.length && !zerosFound; i++) {
+			if (messageB[i]!=0) {
+				size++;				
+			} else {
+				zerosFound = true;
+			}
+		}
+		byte[] result = new byte[size];
+		for (int i=0; i<size; i++){
+			result[i] = messageB[i];
+		}
+		return new String(result);
+	}
 
 }
