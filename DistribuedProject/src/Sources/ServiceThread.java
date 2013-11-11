@@ -19,6 +19,7 @@ public class ServiceThread extends Thread {
 			ParticipantList participants, int pid, LogicalClock clock) {
 		super();
 		this.serviceSocket = serviceSocket;
+		this.participants = participants;
 		this.crWaitingList = crWaitingList;
 		this.participants = participants;
 		this.pid = pid;
