@@ -125,7 +125,7 @@ public class TestCRWaitingListCell {
 		CRWaitingListCell b = new CRWaitingListCell(12,21);
 		
 		String attendu = "Compare (10//20, 12//21) : -1";
-		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compare(a, b);
+		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compareTo(b);
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
 		
@@ -147,7 +147,7 @@ public class TestCRWaitingListCell {
 		CRWaitingListCell b = new CRWaitingListCell(12,21);
 		
 		String attendu = "Compare (12//21, 10//20) : 1";
-		String obtenu = "Compare ("+b.toString()+", "+ a.toString()+") : "+a.compare(b, a);
+		String obtenu = "Compare ("+b.toString()+", "+ a.toString()+") : "+b.compareTo(a);
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
 		
@@ -169,7 +169,7 @@ public class TestCRWaitingListCell {
 		CRWaitingListCell b = new CRWaitingListCell(12,20);
 		
 		String attendu = "Compare (10//20, 12//20) : -1";
-		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compare(a, b);
+		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compareTo(b);
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
 		
@@ -191,7 +191,7 @@ public class TestCRWaitingListCell {
 		CRWaitingListCell b = new CRWaitingListCell(12,20);
 		
 		String attendu = "Compare (12//20, 10//20) : 1";
-		String obtenu = "Compare ("+b.toString()+", "+ a.toString()+") : "+a.compare(b, a);
+		String obtenu = "Compare ("+b.toString()+", "+ a.toString()+") : "+b.compareTo(a);
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
 		
@@ -213,7 +213,7 @@ public class TestCRWaitingListCell {
 		CRWaitingListCell b = new CRWaitingListCell(10,20);
 		
 		String attendu = "Compare (10//20, 10//20) : 0";
-		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compare(a, b);
+		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compareTo(b);
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
 		
