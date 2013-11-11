@@ -63,30 +63,30 @@ public class Participant {
 		
 		return result;
 	}
-	
+
 	/* to Participant*/ 
 	/* change a string into a Participant*/
-	public Boolean fromString(String obj){
+	public boolean fromString(String obj){
 		String aux;
 		String[] aux1;
-		Integer port, pid;
-		ArrayList<String>  resourcesList = new ArrayList<String>();
-		// we find the pid
-		aux = obj.split("//")[0];
-		System.out.println(aux);
-		this.pid =Integer.valueOf(aux);
-		// now we find the port
-		aux = obj.split("//")[1];
-		System.out.println(aux);
-		this.port = Integer.valueOf(aux);
-		// now we find the list of resources
-		aux = obj.split("//")[2];
-		aux1 = aux.split(";;");
-		System.out.println(aux);
-		for (int i = 0; i < aux1.length; i++)  {
-			System.out.println(aux1[i]);
-			this.resourcesList.add(aux1[i]);
-		}
-		return null;
+		boolean result = true;
+		try {
+			ArrayList<String>  resourcesList = new ArrayList<String>();
+			// we find the pid
+			aux = obj.split("//")[0];
+			this.pid =Integer.valueOf(aux);
+			// now we find the port
+			aux = obj.split("//")[1];
+			this.port = Integer.valueOf(aux);
+			// now we find the list of resources
+			aux = obj.split("//")[2];
+			aux1 = aux.split(";;");
+			for (int i = 0; i < aux1.length; i++)  {
+				this.resourcesList.add(aux1[i]);
+			}
+		} catch (Exception e){
+			result = false;
+			}
+			return result;
 	}
 }
