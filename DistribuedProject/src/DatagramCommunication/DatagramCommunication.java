@@ -41,7 +41,6 @@ public class DatagramCommunication {
 		}
 	}
 
-
 	public static CommunicationMessage retrieveMessage(DatagramSocket s) {
 		CommunicationMessage message = new CommunicationMessage();
 		
@@ -75,4 +74,6 @@ public class DatagramCommunication {
 		
 		return message;
 	}
+	
+
 }
