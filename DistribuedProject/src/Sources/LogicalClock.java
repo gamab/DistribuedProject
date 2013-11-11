@@ -21,6 +21,10 @@ public class LogicalClock {
 		this.clock = clock;
 	}
 	
+	public void setClockLogically(int messageClock) {
+		this.clock = Math.max(clock,messageClock+1);
+	}
+	
 	public void incClock() {
 		this.clock ++;
 	}
