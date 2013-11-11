@@ -1,7 +1,7 @@
 package Test;
 
+import CriticalResources.CRWaitingList;
 import CriticalResources.CRWaitingListCell;
-import Sources.Participant;
 
 
 public class TestCRWaitingList {
@@ -9,35 +9,116 @@ public class TestCRWaitingList {
 		System.out.println("########################");
 		System.out.println("## TEST CRWaitingList ##");
 		System.out.println("########################");
-		testCRWaitingListCell_1();
+		testCRWaitingList_1();
 		System.out.println("############################");
-		testCRWaitingListCell_2();
+		testCRWaitingList_2();
 		System.out.println("############################");
-		testCRWaitingListCell_3();
+		testCRWaitingList_3();
 		System.out.println("############################");
-		testCRWaitingListCell_4();
+		testCRWaitingList_4();
 		System.out.println("############################");
-		testCRWaitingListCell_5();
+		testCRWaitingList_5();
 		System.out.println("############################");
-		testCRWaitingListCell_6();
+		testCRWaitingList_6();
 		System.out.println("############################");
-		testCRWaitingListCell_7();
+		testCRWaitingList_7();
 		System.out.println("############################");
-		testCRWaitingListCell_8();
-		System.out.println("############################");
-		testCRWaitingListCell_9();
+		testCRWaitingList_8();
 		System.out.println("############################");
 	}
 
-	public static void testCRWaitingListCell_1() {
+	public static void testCRWaitingList_1() {
 		System.out.println("Test n°1");
 		System.out.println("Description : Test toString");
-		System.out.println("Description : checking if the function applied to a cell with the pid to 110 and the clock to 220 returns what we expect");
+		System.out.println("Description : checking if the function applied to a CRWaitingList returns what we expect");
 		
 		
-		CRWaitingListCell cell = new CRWaitingListCell(110,220);
-		String attendu = "110//220";
-		String obtenu = cell.toString();
+		CRWaitingListCell cell1 = new CRWaitingListCell(1900,10);
+		CRWaitingListCell cell2 = new CRWaitingListCell(1901,20);
+		CRWaitingList list = new CRWaitingList();
+		list.add(cell1);
+		list.add(cell2);
+		
+		String attendu = "1900//10:::1901//20";
+		String obtenu = list.toString();
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+
+	}
+	
+	public static void testCRWaitingList_2() {
+		System.out.println("Test n°2");
+		System.out.println("Description : Test toString");
+		System.out.println("Description : checking if the function applied to a CRWaitingList returns what we expect inserting two cells the other way around");
+		
+		
+		CRWaitingListCell cell1 = new CRWaitingListCell(1900,10);
+		CRWaitingListCell cell2 = new CRWaitingListCell(1901,20);
+		CRWaitingList list = new CRWaitingList();
+		list.add(cell2);
+		list.add(cell1);
+		
+		String attendu = "1900//10:::1901//20";
+		String obtenu = list.toString();
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+
+	}
+	
+	public static void testCRWaitingList_3() {
+		System.out.println("Test n°3");
+		System.out.println("Description : Test toString");
+		System.out.println("Description : checking if the function applied to a CRWaitingList returns what we expect inserting two cells with the same clock");
+		
+		
+		CRWaitingListCell cell1 = new CRWaitingListCell(1900,10);
+		CRWaitingListCell cell2 = new CRWaitingListCell(1901,10);
+		CRWaitingList list = new CRWaitingList();
+		list.add(cell2);
+		list.add(cell1);
+		
+		String attendu = "1900//10:::1901//10";
+		String obtenu = list.toString();
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+
+	}
+	
+	public static void testCRWaitingList_4() {
+		System.out.println("Test n°4");
+		System.out.println("Description : Test toString");
+		System.out.println("Description : checking if the function applied to a CRWaitingList returns what we expect inserting two cells with the same clock the other way around");
+		
+		
+		CRWaitingListCell cell1 = new CRWaitingListCell(1900,10);
+		CRWaitingListCell cell2 = new CRWaitingListCell(1901,10);
+		CRWaitingList list = new CRWaitingList();
+		list.add(cell1);
+		list.add(cell2);
+		
+		String attendu = "1900//10:::1901//10";
+		String obtenu = list.toString();
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
 		
@@ -50,17 +131,19 @@ public class TestCRWaitingList {
 
 	}
 
-	public static void testCRWaitingListCell_2() {
-		System.out.println("Test n°2");
+	public static void testCRWaitingList_5() {
+		System.out.println("Test n°5");
 		System.out.println("Description : Test fromString");
-		System.out.println("Description : checking if retrieving if function fromString applied to \"110//220\" sets the pid to 110 and the clock to 220");
+		System.out.println("Description : checking if retrieving with function fromString applied to the list retrieves everything well");
 		
 		
-		CRWaitingListCell cell = new CRWaitingListCell();
-		String cellString = "110//220";
-		cell.fromString(cellString);
-		String attendu = "pid=110 & clock=220";
-		String obtenu = "pid=" + cell.getPid() + " & clock=" + cell.getClock();
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1901//20";
+		String attendu = "0 : pid=1900 & clock=10 // 1 : pid=1901 & clock=20";
+		list.fromString(listString);
+		
+		String obtenu = "0 : pid=" + list.get(0).getPid() + " & clock=" + list.get(0).getClock();
+		obtenu += " // 1 : pid=" + list.get(1).getPid() + " & clock=" + list.get(1).getClock();
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
 		
@@ -71,16 +154,43 @@ public class TestCRWaitingList {
 			System.out.println("Test failed");
 		}
 	}	
-
-	public static void testCRWaitingListCell_3() {
-		System.out.println("Test n°3");
+	
+	public static void testCRWaitingList_6() {
+		System.out.println("Test n°6");
 		System.out.println("Description : Test fromString");
-		System.out.println("Description : checking if retrieving if function fromString applied to \"110//szd\" returns False");
+		System.out.println("Description : checking if retrieving with function fromString in a list that is not empty works well");
 		
 		
-		CRWaitingListCell cell = new CRWaitingListCell();
-		String cellString = "110//szd";
-		boolean resConvertion = cell.fromString(cellString);
+		CRWaitingList list = new CRWaitingList();
+		CRWaitingListCell cell = new CRWaitingListCell(1900,30);
+		list.add(cell);
+		
+		String listString = "1900//10:::1901//20";
+		String attendu = "0 : pid=1900 & clock=10 // 1 : pid=1901 & clock=20";
+		list.fromString(listString);
+		
+		String obtenu = "0 : pid=" + list.get(0).getPid() + " & clock=" + list.get(0).getClock();
+		obtenu += " // 1 : pid=" + list.get(1).getPid() + " & clock=" + list.get(1).getClock();
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}	
+	
+	public static void testCRWaitingList_7() {
+		System.out.println("Test n°7");
+		System.out.println("Description : Test fromString");
+		System.out.println("Description : checking if retrieving with function fromString applied to an empty string does not work");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = new String();
+		boolean resConvertion = list.fromString(listString);
 		String attendu = "Convertion worked : false";
 		String obtenu = "Convertion worked : " + resConvertion;
 		System.out.println("Attendu : " + attendu);
@@ -94,16 +204,16 @@ public class TestCRWaitingList {
 		}
 	}	
 	
-	public static void testCRWaitingListCell_4() {
-		System.out.println("Test n°4");
+	public static void testCRWaitingList_8() {
+		System.out.println("Test n°8");
 		System.out.println("Description : Test fromString");
-		System.out.println("Description : checking if retrieving if function fromString applied to \"110//220\" returns True");
+		System.out.println("Description : checking if retrieving with function fromString applied to a String that is not meant to be CRWaitingList does not work");
 		
 		
-		CRWaitingListCell cell = new CRWaitingListCell();
-		String cellString = "110//220";
-		boolean resConvertion = cell.fromString(cellString);
-		String attendu = "Convertion worked : true";
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::aze//20";
+		boolean resConvertion = list.fromString(listString);
+		String attendu = "Convertion worked : false";
 		String obtenu = "Convertion worked : " + resConvertion;
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);
@@ -115,114 +225,4 @@ public class TestCRWaitingList {
 			System.out.println("Test failed");
 		}
 	}	
-
-	public static void testCRWaitingListCell_5() {
-		System.out.println("Test n°5");
-		System.out.println("Description : Test compare");
-		System.out.println("Description : compare two cells");
-		
-		CRWaitingListCell a = new CRWaitingListCell(10,20);
-		CRWaitingListCell b = new CRWaitingListCell(12,21);
-		
-		String attendu = "Compare (10//20, 12//21) : -1";
-		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compare(a, b);
-		System.out.println("Attendu : " + attendu);
-		System.out.println("Obtenu  : " + obtenu);
-		
-		if (attendu.equals(obtenu)) {
-			System.out.println("Test OK");
-		}
-		else {
-			System.out.println("Test failed");
-		}
-		
-	}
-	
-	public static void testCRWaitingListCell_6() {
-		System.out.println("Test n°6");
-		System.out.println("Description : Test compare");
-		System.out.println("Description : compare two cells");
-		
-		CRWaitingListCell a = new CRWaitingListCell(10,20);
-		CRWaitingListCell b = new CRWaitingListCell(12,21);
-		
-		String attendu = "Compare (12//21, 10//20) : 1";
-		String obtenu = "Compare ("+b.toString()+", "+ a.toString()+") : "+a.compare(b, a);
-		System.out.println("Attendu : " + attendu);
-		System.out.println("Obtenu  : " + obtenu);
-		
-		if (attendu.equals(obtenu)) {
-			System.out.println("Test OK");
-		}
-		else {
-			System.out.println("Test failed");
-		}
-		
-	}
-	
-	public static void testCRWaitingListCell_7() {
-		System.out.println("Test n°7");
-		System.out.println("Description : Test compare");
-		System.out.println("Description : compare two cells");
-		
-		CRWaitingListCell a = new CRWaitingListCell(10,20);
-		CRWaitingListCell b = new CRWaitingListCell(12,20);
-		
-		String attendu = "Compare (10//20, 12//20) : -1";
-		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compare(a, b);
-		System.out.println("Attendu : " + attendu);
-		System.out.println("Obtenu  : " + obtenu);
-		
-		if (attendu.equals(obtenu)) {
-			System.out.println("Test OK");
-		}
-		else {
-			System.out.println("Test failed");
-		}
-		
-	}
-	
-	public static void testCRWaitingListCell_8() {
-		System.out.println("Test n°8");
-		System.out.println("Description : Test compare");
-		System.out.println("Description : compare two cells");
-		
-		CRWaitingListCell a = new CRWaitingListCell(10,20);
-		CRWaitingListCell b = new CRWaitingListCell(12,20);
-		
-		String attendu = "Compare (12//20, 10//20) : 1";
-		String obtenu = "Compare ("+b.toString()+", "+ a.toString()+") : "+a.compare(b, a);
-		System.out.println("Attendu : " + attendu);
-		System.out.println("Obtenu  : " + obtenu);
-		
-		if (attendu.equals(obtenu)) {
-			System.out.println("Test OK");
-		}
-		else {
-			System.out.println("Test failed");
-		}
-		
-	}
-	
-	public static void testCRWaitingListCell_9() {
-		System.out.println("Test n°9");
-		System.out.println("Description : Test compare");
-		System.out.println("Description : compare two cells");
-		
-		CRWaitingListCell a = new CRWaitingListCell(10,20);
-		CRWaitingListCell b = new CRWaitingListCell(10,20);
-		
-		String attendu = "Compare (10//20, 10//20) : 0";
-		String obtenu = "Compare ("+a.toString()+", "+ b.toString()+") : "+a.compare(a, b);
-		System.out.println("Attendu : " + attendu);
-		System.out.println("Obtenu  : " + obtenu);
-		
-		if (attendu.equals(obtenu)) {
-			System.out.println("Test OK");
-		}
-		else {
-			System.out.println("Test failed");
-		}
-		
-	}
 }
