@@ -1,5 +1,7 @@
 package Sources;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
@@ -117,8 +119,10 @@ public class ServiceThread extends Thread {
 		return answer;
 	}
 	
-	private void sendAnswer(String answer, InetAddress ip, Integer port) {
-		
+	private void sendAnswer(String answer, InetAddress ip, Integer port) throws IOException {
+		byte[] bytesToSend = answer.getBytes();
+		DatagramPacket packet = new DatagramPacket(bytesToSend, bytesToSend.length, ip, port);
+		serviceSocket.send(packet);
 	}
 	
 }
