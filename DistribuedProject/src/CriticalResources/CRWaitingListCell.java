@@ -2,7 +2,7 @@ package CriticalResources;
 import java.util.Comparator;
 
 
-public class CRWaitingListCell implements Comparator<CRWaitingListCell> {
+public class CRWaitingListCell implements Comparable<CRWaitingListCell> {
 
 	private int pid;
 	private int clock;
@@ -48,30 +48,6 @@ public class CRWaitingListCell implements Comparator<CRWaitingListCell> {
 		return result;
 	}
 	
-	@Override
-	// Returns -1 0 1
-	public int compare(CRWaitingListCell a, CRWaitingListCell b) {
-		// TODO Auto-generated method stub
-		int result;
-		if (a.clock < b.clock) {
-			result = -1;
-		}
-		else if (a.clock > b.clock) {
-			result = 1;
-		}
-		else {
-			if (a.pid < b.pid) {
-				result = -1;
-			} 
-			else if (a.pid > b.pid) {
-				result = 1;
-			}
-			else {
-				result = 0;
-			}
-		}
-		return result;
-	}
 
 	public boolean equals(CRWaitingListCell a, CRWaitingListCell b) {
 		if (a.clock == b.clock && a.pid == b.pid) {
@@ -79,5 +55,29 @@ public class CRWaitingListCell implements Comparator<CRWaitingListCell> {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	public int compareTo(CRWaitingListCell b) {
+		int result;
+		// TODO Auto-generated method stub		int result;
+		if (this.clock < b.clock) {
+			result = -1;
+		}
+		else if (this.clock > b.clock) {
+			result = 1;
+		}
+		else {
+			if (this.pid < b.pid) {
+				result = -1;
+			} 
+			else if (this.pid > b.pid) {
+				result = 1;
+			}
+			else {
+				result = 0;
+			}
+		}
+		return result;
 	}
 }
