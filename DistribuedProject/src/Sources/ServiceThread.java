@@ -20,7 +20,7 @@ public class ServiceThread extends Thread {
 	public ServiceThread(DatagramSocket serviceSocket, CRWaitingList crWaitingList,
 			String[] resources,ParticipantList participants, int pid,
 			LogicalClock clock) {
-		super();
+		super("ServiceThread");
 		this.serviceSocket = serviceSocket;
 		this.crWaitingList = crWaitingList;
 		this.resources = resources;
@@ -36,65 +36,66 @@ public class ServiceThread extends Thread {
 	// In function of the request we received we are returning an answer thanks to the protocol we made
 	private String treatRequest(String request) {
 		String answer = null;
-		boolean answerMade = false;
+		
+		//we split the request with "{{" to have access to the different pieces of data contained by the message
+		String[] datas = request.split("{{");
+		//get the clock
+		String clockStrg = datas[datas.length-1];
+		clockStrg = clockStrg.split("}}")[0];
+		//set the clock logically (max(x,y+1))
+		try {
+			int messageClock = Integer.valueOf(clockStrg);
+			this.clock.setClockLogically(messageClock);
+		} catch (NumberFormatException e) {
+			answer = "COULD_NOT_GET_CLOCK{{" + this.clock.getClock() + "}}";
+		}
+		
 		if (request.startsWith("GET_RESOURCE")) {
-			String resourceName = request.split("{{")[1];
-			resourceName = resourceName.split("}}")[0];
-			for (int i=0; i < resources.length && !answerMade; i++) {
+			String resourceName = datas[1].split("}}")[0];
+			boolean resourceFound = false;
+			for (int i=0; i < resources.length && !resourceFound; i++) {
 				if (resourceName.equals(resources[i])) {
-					answer = "OK_IT_IS_YOURS";
-					answerMade = true;
+					answer = "OK_IT_IS_YOURS{{"+ this.clock.getClock() + "}}";
+					resourceFound = true;
 				}
 			}
-			if (!answerMade) {
-				answer = "I_DO_NOT_HAVE_IT";
+			if (!resourceFound) {
+				answer = "I_DO_NOT_HAVE_IT{{"+ this.clock.getClock() + "}}";
 			}
 		}
 		else if (request.startsWith("FREE_RESOURCE")) {
-			String resourceName = request.split("{{")[1];
-			resourceName = resourceName.split("}}")[0];
-			for (int i=0; i < resources.length && !answerMade; i++) {
+			String resourceName = datas[1].split("}}")[0];
+			boolean resourceFound = false;
+			for (int i=0; i < resources.length && !resourceFound; i++) {
 				if (resourceName.equals(resources[i])) {
-					answer = "OK_IT_IS_NOT_YOURS_ANYMORE";
-					answerMade = true;
+					answer = "OK_IT_IS_NOT_YOURS_ANYMORE{{"+ this.clock.getClock() + "}}";
+					resourceFound = true;
 				}
 			}
-			if (!answerMade) {
-				answer = "I_DO_NOT_HAVE_IT";
+			if (!resourceFound) {
+				answer = "I_DO_NOT_HAVE_IT{{"+ this.clock.getClock() + "}}";
 			}
 		}
 		else if (request.startsWith("JOIN")) {
-			String partStrg = request.split("{{")[1];
-			partStrg = partStrg.split("}}")[0];
+			String partStrg = datas[1].split("}}")[0];
 			Participant p = new Participant();
-			boolean added = p.fromString(partStrg);
-			if (added) {
+			boolean partOK = p.fromString(partStrg);
+			if (partOK) {
 				participants.add(p);
-				answer = "OK_I_ADD_YOU";
+				answer = "OK_I_ADD_YOU{{" + this.clock.getClock() + "}}";
 			} else {
-				answer = "NO_WE_DO_NOT_LIKE_YOU";
+				answer = "BAD_FORMAT{{" + this.clock.getClock() + "}}";
 			}
 		}
 		else if (request.startsWith("GET_PARTICIPANTS")) {
 			answer = "PARTICIPANTS{{" + participants.toString() + "}}";
 		}
 		else if (request.startsWith("GET_CRITICAL_REGION")) {
-			String cellStrg = request.split("{{")[1];
-			String clockStrg = request.split("{{")[2];
-			cellStrg = cellStrg.split("}}")[0];
-			clockStrg = clockStrg.split("}}")[0];
+			String cellStrg = datas[1].split("}}")[0];
 			CRWaitingListCell cell = new CRWaitingListCell();
-			boolean cellOK = cell.fromString(clockStrg);
-			boolean clockOK = true;
-			int messageClock = 0;
-			try {
-				messageClock = Integer.valueOf(clockStrg);
-			} catch (NumberFormatException e) {
-				clockOK = false;
-			}
-			if (cellOK && clockOK) {
-				// we add the participant to the list and set our clock logically
-				this.clock.setClockLogically(messageClock);
+			boolean cellOK = cell.fromString(cellStrg);
+			if (cellOK) {
+				// we add the participant to the list
 				this.crWaitingList.add(cell);
 				answer = "OK{{" + this.clock.getClock() + "}}";
 			} else {
@@ -102,22 +103,11 @@ public class ServiceThread extends Thread {
 			}
 		}
 		else if (request.startsWith("FREE_CRITICAL_REGION")) {
-			String cellStrg = request.split("{{")[1];
-			String clockStrg = request.split("{{")[2];
-			cellStrg = cellStrg.split("}}")[0];
-			clockStrg = clockStrg.split("}}")[0];
+			String cellStrg = datas[1].split("}}")[0];
 			CRWaitingListCell cell = new CRWaitingListCell();
-			boolean cellOK = cell.fromString(clockStrg);
-			boolean clockOK = true;
-			int messageClock = 0;
-			try {
-				messageClock = Integer.valueOf(clockStrg);
-			} catch (NumberFormatException e) {
-				clockOK = false;
-			}
-			if (cellOK && clockOK) {
-				// we remove the participant from the list and set our clock logically
-				this.clock.setClockLogically(messageClock);
+			boolean cellOK = cell.fromString(cellStrg);
+			if (cellOK) {
+				// we remove the participant from the list
 				this.crWaitingList.remove(cell);
 				answer = "OK{{" + this.clock.getClock() + "}}";
 			} else {
