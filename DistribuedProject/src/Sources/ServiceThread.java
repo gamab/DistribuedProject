@@ -4,6 +4,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import CriticalResources.CRWaitingList;
+import Participant.ParticipantList;
 
 public class ServiceThread extends Thread {
 
