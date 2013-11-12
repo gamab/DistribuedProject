@@ -12,7 +12,7 @@ public class DatagramCommunication {
 
 	final static int bufferSendLength = 1024;
 	final static int bufferReceiveLength = 1024;
-	
+
 	public static void sendMessage(String message, DatagramSocket s, InetAddress ip, int port) {
 		//if first byte is 1 then it is the last packet we send
 		//if first byte is 0 then we have more than one packet to send
@@ -28,14 +28,14 @@ public class DatagramCommunication {
 			sendMessage(message.substring(bufferReceiveLength - 1),s,ip,port);
 		}
 	}
-	
+
 	public static void sendPacket(String message, DatagramSocket s, InetAddress ip, int port) {
 		DatagramPacket sendPac = new DatagramPacket(message.getBytes(),message.length());
-		
+
 		sendPac.setData(message.getBytes());
 		sendPac.setPort(port);
 		sendPac.setAddress(ip);
-		
+
 		try {
 			s.send(sendPac);
 		} catch (IOException e) {
@@ -46,14 +46,14 @@ public class DatagramCommunication {
 
 	public static CommunicationMessage retrieveMessage(DatagramSocket s) {
 		CommunicationMessage message = new CommunicationMessage();
-		
+
 		String bufferReceive_inString = new String();
 		Boolean receivedEverything = false;
 
 		while (!receivedEverything) {
 			byte[] bufferReceive = new byte[bufferReceiveLength];
 			DatagramPacket receivedPack = new DatagramPacket(bufferReceive,bufferReceive.length);
-			
+
 			//reception of a packet from the server
 			try {
 				s.receive(receivedPack);
@@ -63,10 +63,10 @@ public class DatagramCommunication {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			//adding what is in this packet to the message string without the end_detection_byte
 			message.addToMessage(bufferReceive_inString.substring(1));
-			
+
 			//reading the end_detection_byte
 			if (bufferReceive_inString.startsWith("1")) {
 				message.setIpOrigin(receivedPack.getAddress());
@@ -74,13 +74,11 @@ public class DatagramCommunication {
 				receivedEverything = true;
 			}
 		}
-<<<<<<< HEAD
+		String messageNormalized = normalize(message.getMessage());
+		message.setMessage(messageNormalized);
 		return message;
 	}
-	
-	
-	
-	
+
 	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
 		ArrayList<CommunicationMessage> responses = new ArrayList();
 		int port = 0;
@@ -101,16 +99,10 @@ public class DatagramCommunication {
 			responses.add(retrieveMessage(s)); 
 			find = false;
 		}
-		
+
 		return responses;
 	}
-	
-=======
-		String messageNormalized = normalize(message.getMessage());
-		message.setMessage(messageNormalized);
-		return message;
-	}
-	
+
 	private static String normalize(String message) {
 		byte[] messageB = message.getBytes();
 		boolean zerosFound = false;
@@ -128,6 +120,4 @@ public class DatagramCommunication {
 		}
 		return new String(result);
 	}
->>>>>>> 711400d47909d871f7def834a185544b067172b3
-
 }
