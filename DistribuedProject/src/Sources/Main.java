@@ -3,6 +3,7 @@ import Test.TestCRWaitingList;
 import Test.TestCRWaitingListCell;
 import Test.TestDatagramCommunication;
 import Test.TestParticipant;
+import Test.TestServiceThread;
 
 
 public class Main {
@@ -12,5 +13,6 @@ public class Main {
 		TestCRWaitingListCell.runTest();
 		TestCRWaitingList.runTest();
 		TestDatagramCommunication.runTest();
+		TestServiceThread.runTest();
 	}
 }
