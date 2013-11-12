@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.ArrayList;
+
+import Participant.ParticipantList;
 
 public class DatagramCommunication {
 
@@ -71,8 +74,34 @@ public class DatagramCommunication {
 				receivedEverything = true;
 			}
 		}
-		
 		return message;
+	}
+	
+	
+	
+	
+	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
+		ArrayList<CommunicationMessage> responses = new ArrayList();
+		int port = 0;
+		boolean find = false;
+		// for all the pid which are in the pid's list
+		for (int i = 0 ; i < pids.size() ; i++){
+			// we are searching the corresponding port to the actual pid in the Participants list
+			for (int j = 0 ; i < participants.size() && !find ; j++){
+				if (participants.get(j).getPid() == pids.get(i)){
+					find = true;
+					port = participants.get(j).getPort();
+				}
+			}
+			// then we send the message to the first pid of the list
+			sendMessage(message, s, s.getLocalAddress(), port);
+			// we retrieve the responding message from the processus we send the message to
+			// and add it in the responses list
+			responses.add(retrieveMessage(s)); 
+			find = false;
+		}
+		
+		return responses;
 	}
 	
 
