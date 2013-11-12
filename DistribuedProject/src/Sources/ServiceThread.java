@@ -115,6 +115,8 @@ public class ServiceThread extends Thread {
 				}
 				//if the nro of RC is between 0 and the crWaitingLists length then it is ok
 				nroOK = nroCriticalRegion >= 0 && nroCriticalRegion < this.crWaitingLists.length;
+				System.out.println("In ServiceThread : in treatRequest : crWaitingLists length = " + this.crWaitingLists.length);
+				System.out.println("In ServiceThread : in treatRequest : so nroOK :" + nroOK);
 				if (nroOK){
 					String cellStrg = datas[2];
 					CRWaitingListCell cell = new CRWaitingListCell();
@@ -122,6 +124,7 @@ public class ServiceThread extends Thread {
 					if (cellOK) {
 						// we add the participant to the list
 						this.crWaitingLists[nroCriticalRegion].add(cell);
+						System.out.println("In ServiceThread : in treatRequest : crWaitingList "+ nroCriticalRegion + " : " + this.crWaitingLists[nroCriticalRegion].toString());
 						answer = "OK<<" + this.clock.getClock() + "<<";
 					}
 				} 
@@ -140,6 +143,8 @@ public class ServiceThread extends Thread {
 				}
 				//if the nro of RC is between 0 and the crWaitingLists length then it is ok
 				nroOK = nroCriticalRegion >= 0 && nroCriticalRegion < this.crWaitingLists.length;
+				System.out.println("In ServiceThread : in treatRequest : crWaitingLists length = " + this.crWaitingLists.length);
+				System.out.println("In ServiceThread : in treatRequest : so nroOK :" + nroOK);
 				if (nroOK){
 					String cellStrg = datas[2];
 					CRWaitingListCell cell = new CRWaitingListCell();
@@ -147,6 +152,7 @@ public class ServiceThread extends Thread {
 					if (cellOK) {
 						// we add the participant to the list
 						this.crWaitingLists[nroCriticalRegion].remove(cell);
+						System.out.println("In ServiceThread : in treatRequest : crWaitingList "+ nroCriticalRegion + " : " + this.crWaitingLists[nroCriticalRegion].toString());
 						answer = "OK<<" + this.clock.getClock() + "<<";
 					}
 				} 
