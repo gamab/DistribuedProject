@@ -14,7 +14,7 @@ public class CommunicationMessage {
 	}
 	public CommunicationMessage() {
 		super();
-		this.message = null;
+		this.message = new String();
 		this.ipOrigin = null;
 		this.portOrigin = 0;
 	}

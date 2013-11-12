@@ -74,6 +74,7 @@ public class DatagramCommunication {
 				receivedEverything = true;
 			}
 		}
+<<<<<<< HEAD
 		return message;
 	}
 	
@@ -104,5 +105,29 @@ public class DatagramCommunication {
 		return responses;
 	}
 	
+=======
+		String messageNormalized = normalize(message.getMessage());
+		message.setMessage(messageNormalized);
+		return message;
+	}
+	
+	private static String normalize(String message) {
+		byte[] messageB = message.getBytes();
+		boolean zerosFound = false;
+		int size = 0;
+		for (int i=0; i<messageB.length && !zerosFound; i++) {
+			if (messageB[i]!=0) {
+				size++;				
+			} else {
+				zerosFound = true;
+			}
+		}
+		byte[] result = new byte[size];
+		for (int i=0; i<size; i++){
+			result[i] = messageB[i];
+		}
+		return new String(result);
+	}
+>>>>>>> 711400d47909d871f7def834a185544b067172b3
 
 }

@@ -1,6 +1,7 @@
 package Sources;
 import Test.TestCRWaitingList;
 import Test.TestCRWaitingListCell;
+import Test.TestDatagramCommunication;
 import Test.TestParticipant;
 
 
@@ -10,5 +11,6 @@ public class Main {
 		TestParticipant.runTest();
 		TestCRWaitingListCell.runTest();
 		TestCRWaitingList.runTest();
+		TestDatagramCommunication.runTest();
 	}
 }
