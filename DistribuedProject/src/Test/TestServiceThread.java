@@ -27,14 +27,34 @@ public class TestServiceThread {
 		System.out.println("############################");
 		testCRWaitingList_5();
 		System.out.println("############################");
+		testCRWaitingList_6();
+		System.out.println("############################");
+		testCRWaitingList_7();
+		System.out.println("############################");
+		testCRWaitingList_8();
+		System.out.println("############################");
+		testCRWaitingList_9();
+		System.out.println("############################");
+		testCRWaitingList_10();
+		System.out.println("############################");
+		testCRWaitingList_20();
+		System.out.println("############################");
+		testCRWaitingList_21();
+		System.out.println("############################");
 	}
 
 	public static ServiceThread buildServiceThread(DatagramSocket s) {
-		CRWaitingList crWaitingList = new CRWaitingList();
+		CRWaitingList crWaitingList1 = new CRWaitingList();
 		CRWaitingListCell cell1 = new CRWaitingListCell(1900,20);
 		CRWaitingListCell cell2 = new CRWaitingListCell(1910,22);
-		crWaitingList.add(cell1);
-		crWaitingList.add(cell2);
+		crWaitingList1.add(cell1);
+		crWaitingList1.add(cell2);
+		CRWaitingList crWaitingList2 = new CRWaitingList();
+		CRWaitingListCell cell3 = new CRWaitingListCell(1920,30);
+		CRWaitingListCell cell4 = new CRWaitingListCell(1930,40);
+		crWaitingList2.add(cell3);
+		crWaitingList2.add(cell4);
+		CRWaitingList[] crWaitingLists = {crWaitingList1,crWaitingList2};
 		
 		String[] resources = {"A1","B2"};
 	
@@ -54,7 +74,7 @@ public class TestServiceThread {
 		int pid = 1900;
 		LogicalClock clock = new LogicalClock();
 
-		ServiceThread service = new ServiceThread(s, crWaitingList,resources,participants,pid,clock);
+		ServiceThread service = new ServiceThread(s, crWaitingLists,resources,participants,pid,clock);
 		return service;	
 	}
 	
@@ -219,7 +239,7 @@ public class TestServiceThread {
 			s1 = new DatagramSocket(0);
 			ServiceThread serviceT = buildServiceThread(serviceSocket);
 			serviceT.start();
-			String message1 = "RELEASE_RESOURCE<<A1<<20<<";
+			String message1 = "FREE_RESOURCE<<A1<<20<<";
 			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
 			String attendu = "OK_IT_IS_NOT_YOURS_ANYMORE<<21<<";
 			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
@@ -242,5 +262,316 @@ public class TestServiceThread {
 			e.printStackTrace();
 		}
 	}
+	
+	public static void testCRWaitingList_6() {
+		System.out.println("Test n°6");
+		System.out.println("Description : Test");
+		System.out.println("Description : RELEASE_RESOURCE 1 imposible");
 
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			String message1 = "FREE_RESOURCE<<A9<<20<<";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "I_DO_NOT_HAVE_IT<<21<<";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void testCRWaitingList_7() {
+		System.out.println("Test n°7");
+		System.out.println("Description : Test");
+		System.out.println("Description : JOIN posible");
+
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			Participant participant ;
+			participant = new Participant(1902,24932);
+			participant.addToResourcesList("A8");
+			participant.addToResourcesList("B9");
+			participant.addToResourcesList("C10");
+			participant.addToResourcesList("D11");
+			String message1 = "JOIN<<"+participant.toString()+"<<20<<";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "OK_I_ADD_YOU<<21<<";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void testCRWaitingList_8() {
+		System.out.println("Test n°8");
+		System.out.println("Description : Test");
+		System.out.println("Description : JOIN imposible");
+
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			String message1 = "JOIN<<"+"WIFI"+"<<20<<";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "BAD_FORMAT<<21<<";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void testCRWaitingList_9() {
+		System.out.println("Test n°9");
+		System.out.println("Description : Test");
+		System.out.println("Description : GET_PARTICIPANTS posible");
+
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			String message1 = "GET_PARTICIPANTS"+"<<20<<";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "PARTICIPANTS<<1900//"+ serviceSocket.getLocalPort() +"//A1;;B2:::1910//4923//A2;;B3<<21<<";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void testCRWaitingList_10() {
+		System.out.println("Test n°10");
+		System.out.println("Description : Test");
+		System.out.println("Description : GET_PARTICIPANTS posible after a JOIN.\n\t\tTo check if the join worked");
+
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			Participant participant ;
+			participant = new Participant(1902,24932);
+			participant.addToResourcesList("A8");
+			participant.addToResourcesList("B9");
+			participant.addToResourcesList("C10");
+			participant.addToResourcesList("D11");
+			String message1 = "JOIN<<"+participant.toString()+"<<20<<";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			DatagramCommunication.retrieveMessage(s1);
+			String message2 = "GET_PARTICIPANTS"+"<<22<<";
+			DatagramCommunication.sendMessage(message2, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "PARTICIPANTS<<1900//"+ serviceSocket.getLocalPort() +"//A1;;B2:::1910//4923//A2;;B3:::1902//24932//A8;;B9;;C10;;D11<<23<<";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void testCRWaitingList_11() {
+		System.out.println("Test n°11");
+		System.out.println("Description : Test");
+		System.out.println("Description : GET_CRITICAL_REGION posible");
+
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			Participant participant ;
+			participant = new Participant(1902,24932);
+			participant.addToResourcesList("A8");
+			participant.addToResourcesList("B9");
+			participant.addToResourcesList("C10");
+			participant.addToResourcesList("D11");
+			String message1 = "JOIN<<"+participant.toString()+"<<20<<";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			DatagramCommunication.retrieveMessage(s1);
+			String message2 = "GET_PARTICIPANTS"+"<<22<<";
+			DatagramCommunication.sendMessage(message2, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "PARTICIPANTS<<1900//"+ serviceSocket.getLocalPort() +"//A1;;B2:::1910//4923//A2;;B3:::1902//24932//A8;;B9;;C10;;D11<<23<<";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void testCRWaitingList_20() {
+		System.out.println("Test n°20");
+		System.out.println("Description : Test");
+		System.out.println("Description : Imposible request with good clock");
+
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			String message1 = "BOOM<<20<<";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "BAD_REQUEST";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static void testCRWaitingList_21() {
+		System.out.println("Test n°21");
+		System.out.println("Description : Test");
+		System.out.println("Description : Request without clock");
+
+		DatagramSocket serviceSocket;
+		DatagramSocket s1;
+		try {
+			serviceSocket = new DatagramSocket(0);
+			s1 = new DatagramSocket(0);
+			ServiceThread serviceT = buildServiceThread(serviceSocket);
+			serviceT.start();
+			String message1 = "BOOM";
+			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
+			String attendu = "COULD_NOT_GET_CLOCK<<0<<";
+			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			
+			serviceT.stop();
+			serviceSocket.close();
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
