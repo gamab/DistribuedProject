@@ -1,7 +1,6 @@
 package Test;
 
 import CriticalResources.CRWaitingListCell;
-import Participant.Participant;
 
 
 public class TestCRWaitingListCell {
