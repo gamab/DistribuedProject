@@ -222,11 +222,13 @@ public class Processus {
 	}
 
 	//Retrieve only the message out of the CommunicationMessage
-	public String[] retrieveMessageFromMessage(CommunicationMessage message) {
+	public String[] retrieveMessageWithoutClockFromMessage(CommunicationMessage message) {
 		String[] data = message.getMessage().split("<<");
-		int messageClock = Integer.valueOf(data[data.length-1]);
-		this.clock.setClockLogically(messageClock);
-		return null;
+		String[] result = new String[data.length-1];
+		for (int i=0; i<result.length; i++) {
+			result[i] = data[i];
+		}
+		return result;
 	}
 	
 	//Return a random number between begin and end
