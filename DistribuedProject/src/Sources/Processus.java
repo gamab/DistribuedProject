@@ -175,7 +175,7 @@ public class Processus {
 
 
 	//Goes in the Participants list and retrieves all pids.
-	private ArrayList<Integer> getAllPids() {
+	public ArrayList<Integer> getAllPids() {
 		ListIterator<Participant> partIt = this.participants.listIterator();
 		ArrayList<Integer> pids = new ArrayList<Integer>();
 		while (partIt.hasNext()) {
@@ -199,7 +199,7 @@ public class Processus {
 	}
 
 	//Send a message to a given port
-	private CommunicationMessage sendAndRetrieveOneMessage(String message, int port) {
+	public CommunicationMessage sendAndRetrieveOneMessage(String message, int port) {
 		DatagramCommunication.sendMessage(message, this.socket, this.socket.getLocalAddress(), port);
 		this.clock.incClock();
 		CommunicationMessage answer = DatagramCommunication.retrieveMessage(this.socket);
