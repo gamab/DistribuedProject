@@ -15,15 +15,17 @@ import Participant.Participant;
 import Participant.ParticipantList;
 
 public class Processus {
-	Integer pid;
-	ParticipantList participants;
-	CriticalRegion[] criticalRegion;
-	CRWaitingList[] crWaitingLists;
-	DatagramSocket socket;
-	ServiceThread serviceThread;
-	Integer servicePort;
-	LogicalClock clock;
-	String[] resources;
+	
+	public static int portDefault = 54321;
+	private Integer pid;
+	private ParticipantList participants;
+	private CriticalRegion[] criticalRegion;
+	private CRWaitingList[] crWaitingLists;
+	private DatagramSocket socket;
+	private ServiceThread serviceThread;
+	private Integer servicePort;
+	private LogicalClock clock;
+	private String[] resources;
 
 
 	public Processus(Integer pid) throws SocketException{
@@ -39,14 +41,14 @@ public class Processus {
 		this.resources = new String[2];
 		try{
 			// if it's the first processus we listen on port 54321 and we give him a1, b2
-			serviceThreadSocket = new DatagramSocket(54321);
+			serviceThreadSocket = new DatagramSocket(portDefault);
 			this.resources[0] = "a1";
 			this.resources[1] = "b2";
 		}catch (SocketException e){
 			//if it's already used we listen to another random port
 			serviceThreadSocket = new DatagramSocket(0);
 			// now we ask to the processus listening on the port 54321 the actual list of participants 
-			ArrayList<CommunicationMessage> messages = sendMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",54321);
+			ArrayList<CommunicationMessage> messages = sendMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",portDefault);
 			retrieveClockFromMessageList(messages);
 			// we actualize our own list of participants
 			this.participants.fromString(messages.get(0).getMessage());	
