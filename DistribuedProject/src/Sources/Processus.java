@@ -37,6 +37,7 @@ public class Processus {
 		System.out.println("In Processus : Creating participants list.");
 		this.participants = new ParticipantList();
 		System.out.println("In Processus : Creating critical regions.");
+		this.criticalRegion = new CriticalRegion[3];
 		this.criticalRegion[0] = new CR1(this,1); 
 		this.criticalRegion[1] = new CR2(this,2); 
 		this.criticalRegion[2] = new CR3(this,3); 
@@ -63,7 +64,7 @@ public class Processus {
 			System.out.println("In Processus : Creating serviceThreadSocket on port :" + serviceThreadSocket.getLocalPort());
 			// now we ask to the processus listening on the port 54321 the actual list of participants 
 			System.out.println("In Processus : asking participants to the first processus.");
-			CommunicationMessage message = sendOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",portDefault);
+			CommunicationMessage message = sendAndRetrieveOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",portDefault);
 			retrieveClockFromMessage(message);
 			// we actualize our own list of participants
 			System.out.println("In Processus : Updating our list.");
@@ -71,7 +72,7 @@ public class Processus {
 			// if we are the second processus we take the following resources
 			System.out.println("In Processus : Creating processus ressources.");
 			if (this.participants.size() == 1) {
-				this.resources[0] = "a2 ";
+				this.resources[0] = "a2";
 				this.resources[1] = "b3";
 			}
 			// if we are the third processus we takes the following resources
@@ -82,7 +83,7 @@ public class Processus {
 		}	
 		//we save our serviceThread port
 		System.out.println("In Processus : Saving our servicePort.");
-		this.servicePort = serviceThreadSocket.getPort();
+		this.servicePort = serviceThreadSocket.getLocalPort();
 		//we create ourself
 		ArrayList<String> resourcesList = new ArrayList<String>();
 		for (int i = 0; i<this.resources.length;i++) {
@@ -113,7 +114,8 @@ public class Processus {
 		//we wait for every program to join
 		while (participants.size() != 3) {
 			try {
-				Thread.currentThread().sleep(1000);
+				System.out.println("In Processus : run : We are : " + participants.size() + ", waiting to be 3...");
+				Thread.currentThread().sleep(2000);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -197,7 +199,7 @@ public class Processus {
 	}
 
 	//Send a message to a given port
-	private CommunicationMessage sendOneMessage(String message, int port) {
+	private CommunicationMessage sendAndRetrieveOneMessage(String message, int port) {
 		DatagramCommunication.sendMessage(message, this.socket, this.socket.getLocalAddress(), port);
 		this.clock.incClock();
 		CommunicationMessage answer = DatagramCommunication.retrieveMessage(this.socket);
