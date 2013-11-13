@@ -15,7 +15,7 @@ import Participant.Participant;
 import Participant.ParticipantList;
 
 public class Processus {
-	
+
 	public static int portDefault = 54321;
 	private Integer pid;
 	private ParticipantList participants;
@@ -31,28 +31,43 @@ public class Processus {
 	public Processus(Integer pid) throws SocketException{
 		super();
 		this.pid = pid;
+		System.out.println("In Processus : Creating participants list.");
 		this.participants = new ParticipantList();
+		System.out.println("In Processus : Creating critical regions.");
+		this.criticalRegion = new CriticalRegion[3];
 		this.criticalRegion[0] = new CriticalRegion(this,1); 
 		this.criticalRegion[1] = new CriticalRegion(this,2); 
 		this.criticalRegion[2] = new CriticalRegion(this,3); 
+		System.out.println("In Processus : Creating critical regions regions waiting lists.");
 		this.crWaitingLists = new CRWaitingList[3];
+		System.out.println("In Processus : Creating clock.");
 		this.clock = new LogicalClock();
 		DatagramSocket serviceThreadSocket;
+		System.out.println("In Processus : Creating resources array.");
 		this.resources = new String[2];
+		System.out.println("In Processus : Creating the processus.");		
+		this.socket = new DatagramSocket(0);
+		
 		try{
 			// if it's the first processus we listen on port 54321 and we give him a1, b2
+			System.out.println("In Processus : Creating serviceThreadSocket on port :" + portDefault);
 			serviceThreadSocket = new DatagramSocket(portDefault);
+			System.out.println("In Processus : Creating processus ressources.");
 			this.resources[0] = "a1";
 			this.resources[1] = "b2";
 		}catch (SocketException e){
 			//if it's already used we listen to another random port
 			serviceThreadSocket = new DatagramSocket(0);
+			System.out.println("In Processus : Creating serviceThreadSocket on port :" + serviceThreadSocket.getLocalPort());
 			// now we ask to the processus listening on the port 54321 the actual list of participants 
-			ArrayList<CommunicationMessage> messages = sendMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",portDefault);
-			retrieveClockFromMessageList(messages);
+			System.out.println("In Processus : asking participants to the first processus.");
+			CommunicationMessage message = sendOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",portDefault);
+			retrieveClockFromMessage(message);
 			// we actualize our own list of participants
-			this.participants.fromString(messages.get(0).getMessage());	
+			System.out.println("In Processus : Updating our list.");
+			this.participants.fromString(message.getMessage().split("<<")[1]);	
 			// if we are the second processus we take the following resources
+			System.out.println("In Processus : Creating processus ressources.");
 			if (this.participants.size() == 1) {
 				this.resources[0] = "a2 ";
 				this.resources[1] = "b3";
@@ -64,6 +79,7 @@ public class Processus {
 			}
 		}	
 		//we save our serviceThread port
+		System.out.println("In Processus : Saving our servicePort.");
 		this.servicePort = serviceThreadSocket.getPort();
 		//we create ourself
 		ArrayList<String> resourcesList = new ArrayList<String>();
@@ -73,18 +89,21 @@ public class Processus {
 		Participant me = new Participant(this.pid, this.servicePort, resourcesList);
 
 		//we ask everyone to add us with a JOIN request
+		System.out.println("In Processus : Make a join request.");
 		String joinRequest = "JOIN<<"+me.toString()+"<<"+this.clock.getClock()+"<<";
 		ArrayList<CommunicationMessage> messages = sendMessage(joinRequest,-1);
 		retrieveClockFromMessageList(messages);
-		
+
 		//we add ourselves to the list
+		System.out.println("In Processus : Adding ourself to the list of participants.");
 		this.participants.add(me);
-		
+
 		//we create the serviceThread
+		System.out.println("In Processus : Creating our serviceThread.");
 		this.serviceThread = new ServiceThread(serviceThreadSocket, this.crWaitingLists, this.resources,this.participants, this.pid,this.clock);
 
 	}
-	
+
 	//What our program has to do
 	public void run() {
 		//we start the serviceThread
@@ -166,17 +185,29 @@ public class Processus {
 		return messages;
 	}
 
-	//Send a message to ANY if pid = -1 or just the given pid
+	//Send a message to a given port
+	private CommunicationMessage sendOneMessage(String message, int port) {
+		DatagramCommunication.sendMessage(message, this.socket, this.socket.getLocalAddress(), port);
+		this.clock.incClock();
+		CommunicationMessage answer = DatagramCommunication.retrieveMessage(this.socket);
+		return answer;
+	}
+
+	//Retrieve the clock from a list of messages
 	private void retrieveClockFromMessageList(ArrayList<CommunicationMessage> messages) {
 		ListIterator<CommunicationMessage> it = messages.listIterator();
 		String[] data;
 		while (it.hasNext()) {
-			data = it.next().getMessage().split("<<");
-			int messageClock = Integer.valueOf(data[data.length-1]);
-			this.clock.setClockLogically(messageClock);
+			retrieveClockFromMessage(it.next());
 		}
 	}
-	
+	//Retrieve the clock from one message
+	private void retrieveClockFromMessage(CommunicationMessage message) {
+		String[] data = message.getMessage().split("<<");
+		int messageClock = Integer.valueOf(data[data.length-1]);
+		this.clock.setClockLogically(messageClock);
+	}
+
 	//Return a random number between begin and end
 	public static int randomInRange(int begin, int end) {
 		return (int) (Math.random()*(end-begin) + begin);
