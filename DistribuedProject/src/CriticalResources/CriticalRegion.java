@@ -2,11 +2,11 @@ package CriticalResources;
 
 import Sources.Processus;
 
-public class CriticalRegion {
+public abstract class CriticalRegion {
 
-	private Processus proc;
-	private int crid;
-	private CRWaitingList crWaitingList;
+	protected Processus proc;
+	protected int crid;
+	protected CRWaitingList crWaitingList;
 	
 	
 	public CriticalRegion(Processus proc, Integer crid){
@@ -25,15 +25,15 @@ public class CriticalRegion {
 		this.crWaitingList = crWaitingList;
 	}
 	
-	public void enter(){
+	public abstract void enter() throws Exception;
 		
-	}
 	
-	public void execute(){
-		
-	}
 	
-	public void release(){
+	public abstract void execute();
 		
-	}
+	
+	
+	public abstract void release();
+		
+	
 }

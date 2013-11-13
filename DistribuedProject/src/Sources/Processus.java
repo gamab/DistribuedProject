@@ -7,6 +7,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import CriticalResources.CR1;
+import CriticalResources.CR2;
+import CriticalResources.CR3;
 import CriticalResources.CRWaitingList;
 import CriticalResources.CriticalRegion;
 import DatagramCommunication.CommunicationMessage;
@@ -34,10 +37,9 @@ public class Processus {
 		System.out.println("In Processus : Creating participants list.");
 		this.participants = new ParticipantList();
 		System.out.println("In Processus : Creating critical regions.");
-		this.criticalRegion = new CriticalRegion[3];
-		this.criticalRegion[0] = new CriticalRegion(this,1); 
-		this.criticalRegion[1] = new CriticalRegion(this,2); 
-		this.criticalRegion[2] = new CriticalRegion(this,3); 
+		this.criticalRegion[0] = new CR1(this,1); 
+		this.criticalRegion[1] = new CR2(this,2); 
+		this.criticalRegion[2] = new CR3(this,3); 
 		System.out.println("In Processus : Creating critical regions regions waiting lists.");
 		this.crWaitingLists = new CRWaitingList[3];
 		System.out.println("In Processus : Creating clock.");
@@ -91,7 +93,7 @@ public class Processus {
 		//we ask everyone to add us with a JOIN request
 		System.out.println("In Processus : Make a join request.");
 		String joinRequest = "JOIN<<"+me.toString()+"<<"+this.clock.getClock()+"<<";
-		ArrayList<CommunicationMessage> messages = sendMessage(joinRequest,-1);
+		ArrayList<CommunicationMessage> messages = sendAndRetrieveMessage(joinRequest,-1);
 		retrieveClockFromMessageList(messages);
 
 		//we add ourselves to the list
@@ -120,7 +122,12 @@ public class Processus {
 		//we start our loop
 		while (true) {
 			CriticalRegion cr = criticalRegion[randomInRange(0,criticalRegion.length-1)];
-			cr.enter();
+			try {
+				cr.enter();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			cr.execute();
 			cr.release();
 		}
@@ -155,6 +162,10 @@ public class Processus {
 	public Integer my_servicePort(){
 		return servicePort;
 	}
+	
+	public LogicalClock getClock(){
+		return this.clock;
+	}
 
 	public void setServicePort(Integer servicePort){
 		this.servicePort = servicePort;
@@ -172,7 +183,7 @@ public class Processus {
 	}
 
 	//Send a message to ANY if pid = - 1 or just the given pid
-	private ArrayList<CommunicationMessage> sendMessage(String message, int pid) {
+	public ArrayList<CommunicationMessage> sendAndRetrieveMessage(String message, int pid) {
 		ArrayList<CommunicationMessage> messages = new ArrayList<CommunicationMessage>();
 		ArrayList<Integer> pids = new ArrayList<Integer>();
 		if (pid == -1) {
@@ -194,7 +205,7 @@ public class Processus {
 	}
 
 	//Retrieve the clock from a list of messages
-	private void retrieveClockFromMessageList(ArrayList<CommunicationMessage> messages) {
+	public void retrieveClockFromMessageList(ArrayList<CommunicationMessage> messages) {
 		ListIterator<CommunicationMessage> it = messages.listIterator();
 		String[] data;
 		while (it.hasNext()) {
@@ -202,12 +213,20 @@ public class Processus {
 		}
 	}
 	//Retrieve the clock from one message
-	private void retrieveClockFromMessage(CommunicationMessage message) {
+	public void retrieveClockFromMessage(CommunicationMessage message) {
 		String[] data = message.getMessage().split("<<");
 		int messageClock = Integer.valueOf(data[data.length-1]);
 		this.clock.setClockLogically(messageClock);
 	}
 
+	//Retrieve only the message out of the CommunicationMessage
+	public String[] retrieveMessageFromMessage(CommunicationMessage message) {
+		String[] data = message.getMessage().split("<<");
+		int messageClock = Integer.valueOf(data[data.length-1]);
+		this.clock.setClockLogically(messageClock);
+		return null;
+	}
+	
 	//Return a random number between begin and end
 	public static int randomInRange(int begin, int end) {
 		return (int) (Math.random()*(end-begin) + begin);
