@@ -46,7 +46,7 @@ public class Participant {
 		return port;
 	}
 	
-	public InetAddress getId(){
+	public InetAddress getIp(){
 		return ip;
 	}
 
