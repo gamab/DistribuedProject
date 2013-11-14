@@ -29,11 +29,12 @@ public class Processus {
 	private DatagramSocket socket;
 	private ServiceThread serviceThread;
 	private Integer servicePort;
+	private InetAddress serviceAddress;
 	private LogicalClock clock;
 	private String[] resources;
 
 
-	public Processus(Integer pid) throws SocketException{
+	public Processus(Integer pid) throws Exception{
 		super();
 		this.pid = pid;
 		System.out.println("In Processus "+ pid +": Creating participants list.");
@@ -83,14 +84,15 @@ public class Processus {
 			}
 		}	
 		//we save our serviceThread port
-		System.out.println("In Processus "+ pid +": Saving our servicePort.");
 		this.servicePort = serviceThreadSocket.getLocalPort();
+		this.serviceAddress = DatagramCommunication.getOurAddressOnWlan();
+		System.out.println("In Processus "+ pid +": Saving our service IP/PORT : " + serviceAddress  + "/" + this.servicePort);
 		//we create ourself
 		ArrayList<String> resourcesList = new ArrayList<String>();
 		for (int i = 0; i<this.resources.length;i++) {
 			resourcesList.add(this.resources[i]);
 		}
-		Participant me = new Participant(this.pid, this.servicePort, resourcesList);
+		Participant me = new Participant(this.pid, this.servicePort, this.serviceAddress, resourcesList);
 		System.out.println("In Processus "+ pid +": Creating ourself :" + me);
 
 		//we ask everyone to add us with a JOIN request
