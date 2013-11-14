@@ -117,7 +117,7 @@ public class Processus {
 	}
 
 	//What our program has to do
-	public void run() {
+	public void run() throws Exception {
 
 		try {
 			//we start the serviceThread
