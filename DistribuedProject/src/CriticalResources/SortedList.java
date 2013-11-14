@@ -3,6 +3,7 @@ package CriticalResources;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ListIterator;
 
 public class SortedList<E> extends AbstractList<E> {
 
@@ -14,7 +15,17 @@ public class SortedList<E> extends AbstractList<E> {
         internalList.add(e);
         Collections.sort(internalList, null);
     }
-
+    
+    @Override 
+    public E remove(int position) {
+        return internalList.remove(position);
+    }
+    
+    @Override 
+    public boolean remove(Object o) {
+        return internalList.remove(o);
+    }
+    
     @Override
     public E get(int i) {
         return internalList.get(i);
