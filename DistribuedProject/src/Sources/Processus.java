@@ -20,6 +20,9 @@ import Participant.ParticipantList;
 public class Processus {
 
 	public static int portDefault = 54321;
+	public static int ANY = -1;
+	public static int NONE = -2;
+	
 	private Integer pid;
 	private ParticipantList participants;
 	private CriticalRegion[] criticalRegion;
@@ -93,7 +96,7 @@ public class Processus {
 		//we ask everyone to add us with a JOIN request
 		System.out.println("In Processus "+ pid +": Make a join request.");
 		String joinRequest = "JOIN<<"+me.toString()+"<<"+this.clock.getClock()+"<<";
-		ArrayList<CommunicationMessage> messages = sendAndRetrieveMessage(joinRequest,-1);
+		ArrayList<CommunicationMessage> messages = sendAndRetrieveMessage(joinRequest,ANY);
 		retrieveClockFromMessageList(messages);
 
 		//we add ourselves to the list
@@ -144,16 +147,18 @@ public class Processus {
 		}
 	}
 
-	public Integer myPid() {
+	public int myPid() {
 		return pid;
 	}
 
-	public Integer processes(){
+	public int processes(){
 		return participants.size();
 	}
 
-	public Integer whoHasResource(String resource){
-		Integer result = null;
+	//returns the pid of the processus who has the resource
+	//returns NONE if no one has the resource
+	public int whoHasResource(String resource){
+		int result = NONE;
 		boolean findIt = false;
 		// we search into the list of participants
 		for (int i = 0 ; i < participants.size() && !findIt ; i++){
@@ -167,7 +172,7 @@ public class Processus {
 		return result;
 	}
 
-	public Integer whoIsHeadOfCRWaitingList(Integer crid){
+	public int whoIsHeadOfCRWaitingList(Integer crid){
 		return criticalRegion[crid].getCrWaitingList().get(0).getPid();
 	}
 
@@ -202,7 +207,7 @@ public class Processus {
 	public ArrayList<CommunicationMessage> sendAndRetrieveMessage(String message, int pid) {
 		ArrayList<CommunicationMessage> messages = new ArrayList<CommunicationMessage>();
 		ArrayList<Integer> pids = new ArrayList<Integer>();
-		if (pid == -1) {
+		if (pid == ANY) {
 			pids = getAllPidsButMine();
 		} else {
 			pids.add(pid);
