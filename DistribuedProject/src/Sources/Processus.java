@@ -199,7 +199,7 @@ public class Processus {
 	public ArrayList<Integer> getAllPidsButMine() {
 		ListIterator<Participant> partIt = this.participants.listIterator();
 		ArrayList<Integer> pids = new ArrayList<Integer>();
-		int current_pid;
+		int current_pid = this.NONE;
 		while (partIt.hasNext()) {
 			current_pid = partIt.next().getPid();
 			if (current_pid != this.pid) {
@@ -209,7 +209,7 @@ public class Processus {
 		return pids;
 	}
 
-	//Send a message to ANY if pid = - 1 or just the given pid
+	//Send a message to ANY if pid = this.ANY or just the given pid
 	public ArrayList<CommunicationMessage> sendAndRetrieveMessage(String message, int pid) {
 		ArrayList<CommunicationMessage> messages = new ArrayList<CommunicationMessage>();
 		ArrayList<Integer> pids = new ArrayList<Integer>();
@@ -260,5 +260,4 @@ public class Processus {
 	public static int randomInRange(int begin, int end) {
 		return (int) (Math.random()*(end-begin) + begin);
 	}
-
 }
