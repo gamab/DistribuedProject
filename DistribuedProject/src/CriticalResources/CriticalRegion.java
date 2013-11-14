@@ -33,7 +33,7 @@ public abstract class CriticalRegion {
 	//we ask to be add in the waiting list of CR 
 	//then we  wait until we can get the resource
 	public void getCriticalRegion(int crid) throws Exception {
-		ArrayList<CommunicationMessage> messages = proc.sendAndRetrieveMessage("GET_CRITICAL_REGION", -1);
+		ArrayList<CommunicationMessage> messages = proc.sendAndRetrieveMessage("GET_CRITICAL_REGION"+"<<" + proc.getClock().toString() + "<<", -1);
 		proc.retrieveClockFromMessageList(messages);
 		boolean allAgree = true;
 		// if all the message retrieved say OK then you can add the proc to the waiting list of the CR
