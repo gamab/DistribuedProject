@@ -15,12 +15,12 @@ public class TestProcessus {
 //		System.out.println("############################");
 //		testProcessus_3();
 //		System.out.println("############################");
-		testProcessus_4();
-		System.out.println("############################");
+//		testProcessus_4();
+//		System.out.println("############################");
 //		testProcessus_5();
 //		System.out.println("############################");
-//		testProcessus_6();
-//		System.out.println("############################");
+		testProcessus_6();
+		System.out.println("############################");
 	}
 
 	public static void testProcessus_1() {
@@ -136,9 +136,11 @@ public class TestProcessus {
 		System.out.println("Description : ");
 		try {
 			Processus proc = new Processus(1900);
+			int pid = proc.whoHasResource("a1");
+			String result = String.valueOf(pid);
 			
 			String attendu = "1900";
-			String obtenu = proc.whoHasResource("a1").toString();
+			String obtenu = result;
 
 			System.out.println("Attendu : " + attendu);
 			System.out.println("Obtenu  : " + obtenu);
@@ -157,13 +159,15 @@ public class TestProcessus {
 	
 	public static void testProcessus_6() {
 		System.out.println("Test n°6");
-		System.out.println("Description : Test whoHasResource without a good resource");
+		System.out.println("Description : Test whoHasResource with a ressource not inside the resource list");
 		System.out.println("Description : ");
 		try {
 			Processus proc = new Processus(1900);
+			int pid = proc.whoHasResource("c1");
+			String result = String.valueOf(pid);
 			
-			String attendu = "";
-			String obtenu = proc.whoHasResource("c1").toString();
+			String attendu = "-2";
+			String obtenu = result;
 
 			System.out.println("Attendu : " + attendu);
 			System.out.println("Obtenu  : " + obtenu);
