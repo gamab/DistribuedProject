@@ -21,9 +21,9 @@ public class CR1 extends CriticalRegion{
 		//then we  wait until we can get the resource
 		getCriticalRegion(crid);
 		// ask for the first resource
-		if (getResource("A1")) {
+		if (getResource("a1")) {
 			//ask for the second resource
-			if (getResource("B1")){
+			if (getResource("b1")){
 			}else{
 				throw new Exception();
 			}
@@ -36,8 +36,8 @@ public class CR1 extends CriticalRegion{
 	public void release() throws Exception {
 		// TODO Auto-generated method stub
 		//free resource
-		freeResources("A1");
-		freeResources("B1");
+		freeResources("a1");
+		freeResources("b1");
 		freeCriticalRegion(crid);
 
 
