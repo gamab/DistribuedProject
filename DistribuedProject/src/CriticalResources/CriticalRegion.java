@@ -66,7 +66,7 @@ public abstract class CriticalRegion {
 	public void getResource(String Resource) throws Exception{
 		int pidResource2 = proc.whoHasResource("B1");
 		//now that we know who has it, we send a request 
-		ArrayList<CommunicationMessage> message2 = proc.sendAndRetrieveMessage("GET_RESOURCE" + "<<A2<<"+ proc.getClock()+"<<", pidResource2);
+		ArrayList<CommunicationMessage> message2 = proc.sendAndRetrieveMessage("GET_RESOURCE" + "<<A2<<"+ proc.getClock().getClock() +"<<", pidResource2);
 		// we set the clock
 		proc.retrieveClockFromMessageList(message2);
 		// find the message and look if it's what we are expecting for
