@@ -11,6 +11,11 @@ public class TestProcessusThread extends Thread {
 	}
 	
 	public void run() {
-		proc.run();
+		try {
+			proc.run();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
