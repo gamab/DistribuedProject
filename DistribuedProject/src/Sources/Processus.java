@@ -171,12 +171,18 @@ public class Processus {
 		}
 		return result;
 	}
-
-	public int whoIsHeadOfCRWaitingList(Integer crid){
-		return criticalRegion[crid].getCrWaitingList().get(0).getPid();
+	
+	//returns the pid of the processus who is head of the cr
+	//returns NONE if no one has the resource
+	public int whoIsHeadOfCRWaitingList(int crid){
+		int result = NONE;
+		if (criticalRegion[crid].getCrWaitingList().size() > 0) {
+			result = criticalRegion[crid].getCrWaitingList().get(0).getPid();
+		}
+		return result;
 	}
 
-	public Integer my_servicePort(){
+	public int my_servicePort(){
 		return servicePort;
 	}
 
@@ -184,7 +190,7 @@ public class Processus {
 		return this.clock;
 	}
 
-	public void setServicePort(Integer servicePort){
+	public void setServicePort(int servicePort){
 		this.servicePort = servicePort;
 	}
 
