@@ -39,9 +39,9 @@ public abstract class CriticalRegion {
 		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion  : send message GET_CRITICAL_REGION");
 		// we ask to everyone to add us in there Watinglist of the CR asked for
 		ArrayList<CommunicationMessage> messages = proc.sendAndRetrieveMessage("GET_CRITICAL_REGION"+"<<"+ crid + "<<" + cell.toString() + "<<" + proc.getClock().getClock() + "<<", proc.ANY);
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion : Clock before setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion : Clock before setting " + proc.getClock().getClock());
 		proc.retrieveClockFromMessageList(messages);
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion : Clock after setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion : Clock after setting " + proc.getClock().getClock());
 
 		// if all the message retrieved say OK then you can add the proc to the waiting list of the CR
 		// else we ask again
@@ -72,10 +72,10 @@ public abstract class CriticalRegion {
 		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getResource : send and retrieve message GET_RESSOURCE ");
 		ArrayList<CommunicationMessage> message = proc.sendAndRetrieveMessage("GET_RESOURCE" + "<<" + resource + "<<"+ proc.getClock().getClock() +"<<", pidResource2);
 		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getResource : message received " );
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getResource : Clock before setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getResource : Clock before setting " + proc.getClock().getClock());
 		// we set the clock
 		proc.retrieveClockFromMessageList(message);
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getResource : Clock after setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getResource : Clock after setting " + proc.getClock().getClock());
 		// find the message and look if it's what we are expecting for
 		String[] mess = proc.retrieveMessageWithoutClockFromMessage(message.get(0));
 		if (mess[0].equals("OK_IT_IS_YOURS")){
@@ -96,10 +96,10 @@ public abstract class CriticalRegion {
 		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeResources : send and retrieve message FREE_RESSOURCE ");
 		ArrayList<CommunicationMessage> message = proc.sendAndRetrieveMessage("FREE_RESOURCE" + "<<"+resource+"<<"+ proc.getClock().getClock() +"<<", pidResource2);
 		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeResources : message received " );
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeResources : Clock before setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeResources : Clock before setting " + proc.getClock().getClock());
 		// we set the clock
 		proc.retrieveClockFromMessageList(message);
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeResources : Clock after setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeResources : Clock after setting " + proc.getClock().getClock());
 		// find the message and look if it's what we are expecting for
 		String[] mess = proc.retrieveMessageWithoutClockFromMessage(message.get(0));
 		if (mess[0].equals("OK_IT_IS_NOT_YOURS_ANYMORE")){
@@ -120,9 +120,9 @@ public abstract class CriticalRegion {
 		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion  : send message FREE_CRITICAL_REGION");
 		// we ask to everyone to add us in there Watinglist of the CR asked for
 		ArrayList<CommunicationMessage> messages = proc.sendAndRetrieveMessage("FREE_CRITICAL_REGION"+"<<"+ crid + "<<" + cell.toString() + "<<" + proc.getClock().getClock() + "<<", -1);
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : Clock before setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : Clock before setting " + proc.getClock().getClock());
 		proc.retrieveClockFromMessageList(messages);
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : Clock after setting" + proc.getClock().getClock());
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : Clock after setting " + proc.getClock().getClock());
 
 		// if all the message retrieved say OK then you delete the proc of the waiting list of the CR
 		// else we ask again
@@ -135,8 +135,8 @@ public abstract class CriticalRegion {
 			}
 		}
 
-		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : we delete the cell " + cell + " from the CRWaitingList " + this.crWaitingList + " of the CR");
 		crWaitingList.remove(0);
+		System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : we delete the cell " + cell + " from the CRWaitingList => List now is :" + this.crWaitingList + " of the CR");
 	}
 
 	public abstract void enter() throws Exception;
