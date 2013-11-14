@@ -1,8 +1,10 @@
 package Participant;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 
 public class Participant {
+	InetAddress ip;
 	Integer pid;
 	Integer port;
 	ArrayList<String>  resourcesList;
@@ -12,19 +14,22 @@ public class Participant {
 	public Participant() {
 		this.pid = null;
 		this.port = null;
+		this.ip = null;
 		this.resourcesList = new ArrayList<String>(); 
 	}
 	
 	
-	public Participant(Integer pid , Integer port){
+	public Participant(Integer pid , Integer port, InetAddress ip){
 		this.pid = pid;
 		this.port = port;
+		this.ip = ip;
 		this.resourcesList = new ArrayList<String>();
 	}
 	
-	public Participant(Integer pid , Integer port,ArrayList<String>  resourcesList ){
+	public Participant(Integer pid , Integer port,InetAddress ip, ArrayList<String>  resourcesList ){
 		this.pid = pid;
 		this.port = port;
+		this.ip = ip;
 		this.resourcesList = resourcesList;
 	}
 	
@@ -40,6 +45,10 @@ public class Participant {
 	public Integer getPort(){
 		return port;
 	}
+	
+	public InetAddress getId(){
+		return ip;
+	}
 
 	/* add */
 	public void addToResourcesList(String element){
@@ -50,7 +59,7 @@ public class Participant {
 	public String toString(){
 		String result = null;
 		/*Integer i = 0;*/
-		result = pid.toString() + "//" + port.toString() + "//";
+		result = pid.toString() + "//" + port.toString() + "//" + ip.getHostAddress() + "//";
 		// on rajoute au string final chaque ressources
 		for(int i=0;i < resourcesList.size() ;i++){
 			if (i == 0){
@@ -67,20 +76,20 @@ public class Participant {
 	/* to Participant*/ 
 	/* change a string into a Participant*/
 	public boolean fromString(String obj){
-		String aux;
+		String[] aux;
 		String[] aux1;
 		boolean result = true;
 		try {
-			ArrayList<String>  resourcesList = new ArrayList<String>();
+			ArrayList<String>  resourcesList = new ArrayList<String>();	
+			aux = obj.split("//");
 			// we find the pid
-			aux = obj.split("//")[0];
-			this.pid =Integer.valueOf(aux);
+			this.pid =Integer.valueOf(aux[0]);
 			// now we find the port
-			aux = obj.split("//")[1];
-			this.port = Integer.valueOf(aux);
+			this.port = Integer.valueOf(aux[1]);
+			// now we find the ip
+			this.ip = InetAddress.getByName(aux[2]);
 			// now we find the list of resources
-			aux = obj.split("//")[2];
-			aux1 = aux.split(";;");
+			aux1 = aux[3].split(";;");
 			for (int i = 0; i < aux1.length; i++)  {
 				this.resourcesList.add(aux1[i]);
 			}
