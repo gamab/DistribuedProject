@@ -12,25 +12,18 @@ public class CR1 extends CriticalRegion{
 		// TODO Auto-generated constructor stub
 	}
 
-	
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ATTENTION!!!!!!!!!!!!!!!!
+
 	@Override
+	// find resources and send an exception if the resource is not free
 	public void enter() throws Exception {
 		// TODO Auto-generated method stub
-		int pidResource1 = proc.whoHasResource("A1");
-		ArrayList<CommunicationMessage> message1 = proc.sendAndRetrieveMessage("GET_RESOURCE" + "<<A1<<"+ proc.getClock()+"<<", pidResource1);
-		// set the clock
-			proc.retrieveClockFromMessageList(message1);
-			// find the message and look if it's what we are expeting for
-			if (message1.get(0).getMessage().equals("OK_IT_IS_YOURS")){
-				proc.wait();
-			} else {
-				throw new Exception();
-			}
-		
-		int pidResource2 = proc.whoHasResource("B1");
-		ArrayList<CommunicationMessage> message2 = proc.sendAndRetrieveMessage("GET_RESOURCE" + "<<A2<<"+ proc.getClock()+"<<", pidResource2);
-	
+		//we ask to be add in the waiting list of CR 
+		//then we  wait until we can get the resource
+		getCriticalRegion(crid);
+		// ask for the first resource
+		getResource("A1");	
+		//ask for the second resource
+		getResource("B1");
 	}
 
 	@Override
