@@ -5,7 +5,9 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.ListIterator;
 
+import Participant.Participant;
 import Participant.ParticipantList;
 
 public class DatagramCommunication {
@@ -80,20 +82,21 @@ public class DatagramCommunication {
 	}
 
 	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
-		ArrayList<CommunicationMessage> responses = new ArrayList();
+		ArrayList<CommunicationMessage> responses = new ArrayList<CommunicationMessage>();
 		int port = 0;
 		boolean find = false;
 		// for all the pid which are in the pid's list
 		for (int i = 0 ; i < pids.size() ; i++){
+			int current_pid = pids.get(i);
 			// we are searching the corresponding port to the actual pid in the Participants list
 			for (int j = 0 ; j < participants.size() && !find ; j++){
-				if (participants.get(j).getPid() == pids.get(i)){
+				if (participants.get(j).getPid()==current_pid){
 					find = true;
 					port = participants.get(j).getPort();
 				}
 			}
 			// then we send the message to the first pid of the list
-			System.out.println("DatagramCommunication sendAndRetreived : SendMessage : message = " + message + " to : " + port);
+			System.out.println("DatagramCommunication sendAndRetreived : send message : message = " + message + " to : " + port);
 			sendMessage(message, s, s.getLocalAddress(), port);
 			// we retrieve the responding message from the processus we send the message to
 			// and add it in the responses list
@@ -105,6 +108,37 @@ public class DatagramCommunication {
 
 		return responses;
 	}
+
+//	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc2(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
+//		ArrayList<CommunicationMessage> responses = new ArrayList<CommunicationMessage>();
+//		int port = 0;
+//		boolean find = false;
+//		// for all the pid which are in the pid's list
+//		ListIterator<Integer> pidIt = pids.listIterator();
+//		while (pidIt.hasNext()) {
+//			ListIterator<Participant> partIt = participants.listIterator();
+//			int current_pid = pidIt.next();
+//			// we are searching the corresponding port to the actual pid in the Participants list
+//			while (partIt.hasNext() && !find) {
+//				Participant current_part = partIt.next();
+//				if (current_part.getPid() == current_pid) {
+//					port = current_part.getPort();
+//					find = true;					
+//				}
+//			}
+//			// then we send the message to the first pid of the list
+//			System.out.println("DatagramCommunication sendAndRetreived : SendMessage : message = " + message + " to : " + port);
+//			sendMessage(message, s, s.getLocalAddress(), port);
+//			// we retrieve the responding message from the processus we send the message to
+//			// and add it in the responses list
+//			System.out.println("DatagramCommunication sendAndRetreived : RetrievingMessages...");
+//			responses.add(retrieveMessage(s)); 
+//			System.out.println("DatagramCommunication sendAndRetreived : Retrieved message = " + responses.get(responses.size()-1).getMessage());
+//			find = false;
+//		}
+//
+//		return responses;
+//	}
 
 	private static String normalize(String message) {
 		byte[] messageB = message.getBytes();
