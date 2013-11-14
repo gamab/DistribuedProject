@@ -11,6 +11,22 @@ public class CRWaitingList extends SortedList<CRWaitingListCell> {
 		super();
 	}
 	
+    public Integer getPosition(CRWaitingListCell e) {
+    	ListIterator<CRWaitingListCell> it = this.listIterator();
+    	Integer result = null;
+    	int i = 0;
+    	while (it.hasNext() && result==null){
+    		CRWaitingListCell current = it.next();
+    		if (current.equals(e)) {
+    			System.out.println("In SortedList : " + current + " == " + e);
+    			result = i;
+    		} else {
+    			System.out.println("In SortedList : " + current + " != " + e);
+    		}
+    	}
+		return result;
+    }
+    
 	public String toString() {
 		String result = new String();
 		ListIterator<CRWaitingListCell> iter = this.listIterator();
