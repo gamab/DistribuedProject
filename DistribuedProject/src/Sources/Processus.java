@@ -23,7 +23,6 @@ public class Processus {
 	private Integer pid;
 	private ParticipantList participants;
 	private CriticalRegion[] criticalRegion;
-	private CRWaitingList[] crWaitingLists;
 	private DatagramSocket socket;
 	private ServiceThread serviceThread;
 	private Integer servicePort;
@@ -38,14 +37,9 @@ public class Processus {
 		this.participants = new ParticipantList();
 		System.out.println("In Processus "+ pid +": Creating critical regions.");
 		this.criticalRegion = new CriticalRegion[3];
-		this.criticalRegion[0] = new CR1(this,1); 
-		this.criticalRegion[1] = new CR2(this,2); 
-		this.criticalRegion[2] = new CR3(this,3); 
-		System.out.println("In Processus "+ pid +": Creating critical regions regions waiting lists.");
-		this.crWaitingLists = new CRWaitingList[3];
-		this.crWaitingLists[0] = new CRWaitingList();
-		this.crWaitingLists[1] = new CRWaitingList();
-		this.crWaitingLists[2] = new CRWaitingList();
+		this.criticalRegion[0] = new CR1(this,0); 
+		this.criticalRegion[1] = new CR2(this,1); 
+		this.criticalRegion[2] = new CR3(this,2);
 		System.out.println("In Processus "+ pid +": Creating clock.");
 		this.clock = new LogicalClock();
 		DatagramSocket serviceThreadSocket;
@@ -106,9 +100,16 @@ public class Processus {
 		System.out.println("In Processus "+ pid +": Adding ourself to the list of participants.");
 		this.participants.add(me);
 
+		//we only get the waiting lists for the ServiceThread
+		System.out.println("In Processus "+ pid +": Creating the waiting list.");
+		CRWaitingList[] crWaitingLists = new CRWaitingList[3];
+		for (int i=0; i<criticalRegion.length; i++) {
+			crWaitingLists[i] = criticalRegion[i].getCrWaitingList();
+		}
+
 		//we create the serviceThread
 		System.out.println("In Processus "+ pid +": Creating our serviceThread.");
-		this.serviceThread = new ServiceThread(serviceThreadSocket, this.crWaitingLists, this.resources,this.participants, this.pid,this.clock);
+		this.serviceThread = new ServiceThread(serviceThreadSocket, crWaitingLists, this.resources,this.participants, this.pid,this.clock);
 
 	}
 
@@ -167,7 +168,7 @@ public class Processus {
 	}
 
 	public Integer whoIsHeadOfCRWaitingList(Integer crid){
-		return crWaitingLists[crid].get(0).getPid();
+		return criticalRegion[crid].getCrWaitingList().get(0).getPid();
 	}
 
 	public Integer my_servicePort(){
