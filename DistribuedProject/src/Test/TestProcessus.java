@@ -17,22 +17,27 @@ public class TestProcessus {
 		System.out.println("####################");
 		System.out.println("## TEST PROCESSUS ##");
 		System.out.println("####################");
-		//		testProcessus_1();
-		//		System.out.println("############################");
-		//		testProcessus_2();
-		//		System.out.println("############################");
-		//		testProcessus_3();
-		//		System.out.println("############################");
-		//		testProcessus_4();
-		//		System.out.println("############################");
-		//		testProcessus_5();
-		//		System.out.println("############################");
-		//		testProcessus_6();
-		//		System.out.println("############################");
-		//		testProcessus_7();
-		//		System.out.println("############################");
-		testProcessus_8();
-		System.out.println("############################");
+		try {
+			//		testProcessus_1();
+			//		System.out.println("############################");
+			//		testProcessus_2();
+			//		System.out.println("############################");
+			//			testProcessus_3();
+			//			System.out.println("############################");
+			testProcessus_4();
+			System.out.println("############################");
+			//		testProcessus_5();
+			//		System.out.println("############################");
+			//		testProcessus_6();
+			//		System.out.println("############################");
+			//		testProcessus_7();
+			//		System.out.println("############################");
+			testProcessus_8();
+			System.out.println("############################");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public static void testProcessus_1() {
@@ -59,7 +64,7 @@ public class TestProcessus {
 			e.printStackTrace();
 		}
 	}
-	public static void testProcessus_2() {
+	public static void testProcessus_2() throws Exception {
 		System.out.println("Test n°2");
 		System.out.println("Description : Test run does not crash");
 		System.out.println("Description : ");
@@ -83,7 +88,7 @@ public class TestProcessus {
 			e.printStackTrace();
 		}	
 	}
-	public static void testProcessus_3() {
+	public static void testProcessus_3() throws Exception {
 		System.out.println("Test n°3");
 		System.out.println("Description : Test if launching two processus works");
 		System.out.println("Description : ");
@@ -110,7 +115,7 @@ public class TestProcessus {
 			e.printStackTrace();
 		}		
 	}
-	public static void testProcessus_4() {
+	public static void testProcessus_4() throws Exception {
 		System.out.println("Test n°4");
 		System.out.println("Description : Test if launching three processus works");
 		System.out.println("Description : ");
@@ -268,8 +273,8 @@ public class TestProcessus {
 			Processus proc = new Processus(1920);
 			CRWaitingListCell cell = new CRWaitingListCell(1920,proc.getClock().getClock());
 			proc.sendAndRetrieveOneMessage("GET_CRITICAL_REGION<<1<<"+cell+"<<"+ proc.getClock().getClock(), Processus.portDefault);
-			
-			
+
+
 			int pid_r = crList[1].get(0).getPid();
 			String result = String.valueOf(pid_r);
 
