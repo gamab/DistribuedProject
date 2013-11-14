@@ -25,6 +25,8 @@ public class TestDatagramCommunication {
 		System.out.println("############################");
 		testDatagramCommunication_4();
 		System.out.println("############################");
+		testDatagramCommunication_5();
+		System.out.println("############################");
 	}
 
 	public static void testDatagramCommunication_1() {
@@ -202,4 +204,51 @@ public class TestDatagramCommunication {
 		}
 	}
 
+	public static void testDatagramCommunication_5() {
+		System.out.println("Test n°5");
+		System.out.println("Description : Test send and retreive message to one pid");
+		System.out.println("Description : Sending a small message");
+		try {
+			DatagramSocket s1 = new DatagramSocket(0);
+			int port1 = 50000;
+			ArrayList<Integer> listPids = new ArrayList();
+			ParticipantList participants = new ParticipantList();
+			Participant participant1 = new Participant(2,port1);
+			listPids.add(participant1.getPid());
+			participants.add(participant1);
+			ArrayList<CommunicationMessage> messageRead = new ArrayList();
+
+			String messageToSend = "PONG";
+			TestDatagramCommunicationThread2 t1 = new TestDatagramCommunicationThread2(port1, messageToSend + "1");
+			t1.start();
+			try {
+				Thread.currentThread().sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			messageRead = DatagramCommunication.sendAndRetreivedMessagesToMultipleProc("PING", s1, listPids, participants);
+
+			String attendu = messageToSend + "1-"; 
+			String obtenu = new String();
+			ListIterator<CommunicationMessage> it = messageRead.listIterator();
+			while (it.hasNext()) {
+				obtenu += it.next().getMessage() + "-";
+			}
+
+			System.out.println("Attendu : " + attendu);
+			System.out.println("Obtenu  : " + obtenu);
+
+			if (attendu.equals(obtenu)) {
+				System.out.println("Test OK");
+			}
+			else {
+				System.out.println("Test failed");
+			}
+			s1.close();
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
