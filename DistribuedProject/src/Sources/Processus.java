@@ -43,6 +43,9 @@ public class Processus {
 		this.criticalRegion[2] = new CR3(this,3); 
 		System.out.println("In Processus "+ pid +": Creating critical regions regions waiting lists.");
 		this.crWaitingLists = new CRWaitingList[3];
+		this.crWaitingLists[0] = new CRWaitingList();
+		this.crWaitingLists[1] = new CRWaitingList();
+		this.crWaitingLists[2] = new CRWaitingList();
 		System.out.println("In Processus "+ pid +": Creating clock.");
 		this.clock = new LogicalClock();
 		DatagramSocket serviceThreadSocket;
@@ -50,7 +53,7 @@ public class Processus {
 		this.resources = new String[2];
 		System.out.println("In Processus "+ pid +": Creating the processus.");		
 		this.socket = new DatagramSocket(0);
-		
+
 		try{
 			// if it's the first processus we listen on port 54321 and we give him a1, b2
 			System.out.println("In Processus "+ pid +": Creating serviceThreadSocket on port :" + portDefault);
@@ -92,7 +95,7 @@ public class Processus {
 		}
 		Participant me = new Participant(this.pid, this.servicePort, resourcesList);
 		System.out.println("In Processus "+ pid +": Creating ourself :" + me);
-		
+
 		//we ask everyone to add us with a JOIN request
 		System.out.println("In Processus "+ pid +": Make a join request.");
 		String joinRequest = "JOIN<<"+me.toString()+"<<"+this.clock.getClock()+"<<";
@@ -111,29 +114,32 @@ public class Processus {
 
 	//What our program has to do
 	public void run() {
-		//we start the serviceThread
-		this.serviceThread.start();
-		//we wait for every program to join
-		while (participants.size() != 3) {
-			try {
+
+		try {
+			//we start the serviceThread
+			this.serviceThread.start();
+			//we wait for every program to join
+			while (participants.size() != 3) {
 				System.out.println("In Processus "+ pid +": run : We are : " + participants.size() + ", waiting to be 3...");
 				Thread.currentThread().sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
-		}
-		//we start our loop
-		while (true) {
-			CriticalRegion cr = criticalRegion[randomInRange(0,criticalRegion.length-1)];
-			try {
-				cr.enter();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			//we start our loop
+			while (true) {
+				CriticalRegion cr = criticalRegion[randomInRange(0,criticalRegion.length-1)];
+				Thread.currentThread().sleep(2000);
+				try {
+					cr.enter();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				cr.execute();
+				cr.release();
 			}
-			cr.execute();
-			cr.release();
+
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -150,6 +156,7 @@ public class Processus {
 		boolean findIt = false;
 		// we search into the list of participants
 		for (int i = 0 ; i < participants.size() && !findIt ; i++){
+			System.out.println("In Processus " + this.pid + ": searching who has the ressource " + resource+ " :" + participants.get(i) + "?");
 			// the participant who has the resource give his pid
 			if (participants.get(i).hasTheResource(resource)){
 				result = participants.get(i).getPid();
@@ -166,7 +173,7 @@ public class Processus {
 	public Integer my_servicePort(){
 		return servicePort;
 	}
-	
+
 	public LogicalClock getClock(){
 		return this.clock;
 	}
@@ -236,7 +243,7 @@ public class Processus {
 		}
 		return result;
 	}
-	
+
 	//Return a random number between begin and end
 	public static int randomInRange(int begin, int end) {
 		return (int) (Math.random()*(end-begin) + begin);
