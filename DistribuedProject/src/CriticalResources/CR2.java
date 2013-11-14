@@ -17,17 +17,23 @@ public class CR2 extends CriticalRegion {
 		//then we  wait until we can get the resource
 		getCriticalRegion(crid);
 		// ask for the first resource
-		getResource("A2");	
-		//ask for the second resource
-		getResource("B2");
+		if (getResource("A2")) {
+			//ask for the second resource
+			if (!getResource("B2")){
+				throw new Exception();
+			}
+		}
 
 	}
 
 
 
 	@Override
-	public void release() {
+	public void release() throws Exception {
 		// TODO Auto-generated method stub
+		freeResources("A2");
+		freeResources("B2");
+		freeCriticalRegion(crid);
 		
 	}
 
