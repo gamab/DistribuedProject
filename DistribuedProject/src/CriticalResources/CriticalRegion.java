@@ -33,13 +33,16 @@ public abstract class CriticalRegion {
 	//we ask to be add in the waiting list of CR 
 	//then we  wait until we can get the resource
 	public void getCriticalRegion(int crid) throws Exception {
-		
+		System.out.println("CriticalRegion : getCriticalRegion : create new CRWaitingListCell ");
 		// we create a new cell of crWaitingList for our newbie
 		CRWaitingListCell cell = new CRWaitingListCell(proc.myPid(),proc.getClock().getClock());
-		
+		System.out.println("CriticalRegion : getCriticalRegion  : send message GET_CRITICAL_REGION");
 		// we ask to everyone to add us in there Watinglist of the CR asked for
 		ArrayList<CommunicationMessage> messages = proc.sendAndRetrieveMessage("GET_CRITICAL_REGION"+"<<"+ crid + "<<" + cell.toString() + "<<" + proc.getClock().getClock() + "<<", -1);
+		System.out.println("CriticalRegion : getCriticalRegion : Clock before setting" + proc.getClock().getClock());
 		proc.retrieveClockFromMessageList(messages);
+		System.out.println("CriticalRegion : getCriticalRegion : Clock after setting" + proc.getClock().getClock());
+
 		boolean allAgree = true;
 		
 		// if all the message retrieved say OK then you can add the proc to the waiting list of the CR
@@ -47,10 +50,13 @@ public abstract class CriticalRegion {
 		for(int i = 0; i < messages.size() && allAgree; i++){
 			if (proc.retrieveMessageWithoutClockFromMessage(messages.get(i)).equals("OK")){
 				allAgree = true;
+				System.out.println("CriticalRegion : getCriticalRegion : resonse := "+ i + allAgree );
+
 			} else if (proc.retrieveMessageWithoutClockFromMessage(messages.get(i)).equals("BAD_FORMAT") ){
 				throw new Exception();
 			} 
 			if (allAgree){
+				System.out.println("CriticalRegion : getCriticalRegion : we add the cell to the CRWaitingList of the CR");
 				crWaitingList.add(cell);
 			} else {
 				getCriticalRegion(crid);
@@ -64,14 +70,20 @@ public abstract class CriticalRegion {
 
 	//ask the resource
 	public void getResource(String Resource) throws Exception{
+		System.out.println("CriticalRegion : getResource : Asking WhoHasResource B1");
 		int pidResource2 = proc.whoHasResource("B1");
-		//now that we know who has it, we send a request 
-		ArrayList<CommunicationMessage> message2 = proc.sendAndRetrieveMessage("GET_RESOURCE" + "<<A2<<"+ proc.getClock().getClock() +"<<", pidResource2);
+		System.out.println("CriticalRegion : getResource :"+ pidResource2+ "HasResource B1");
+		//now that we know who has it, we send a request Asking Who
+		System.out.println("CriticalRegion : getResource : send and retrieve message GET_RESSOURCE ");
+		ArrayList<CommunicationMessage> message = proc.sendAndRetrieveMessage("GET_RESOURCE" + "<<A2<<"+ proc.getClock().getClock() +"<<", pidResource2);
+		System.out.println("CriticalRegion : getResource : message received " );
+		System.out.println("CriticalRegion : getResource : Clock before setting" + proc.getClock().getClock());
 		// we set the clock
-		proc.retrieveClockFromMessageList(message2);
+		proc.retrieveClockFromMessageList(message);
+		System.out.println("CriticalRegion : getResource : Clock after setting" + proc.getClock().getClock());
 		// find the message and look if it's what we are expecting for
-		String[] mess2 = proc.retrieveMessageWithoutClockFromMessage(message2.get(0));
-		if (mess2[0].equals("OK_IT_IS_YOURS")){
+		String[] mess = proc.retrieveMessageWithoutClockFromMessage(message.get(0));
+		if (mess[0].equals("OK_IT_IS_YOURS")){
 			proc.wait();
 		} else {
 			throw new Exception();
@@ -82,7 +94,9 @@ public abstract class CriticalRegion {
 
 	
 	
-	public abstract void execute();
+	public void execute() throws InterruptedException{
+		Thread.currentThread().sleep(proc.randomInRange(5000, 9000));
+	}
 		
 	
 	

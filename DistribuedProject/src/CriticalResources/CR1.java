@@ -26,11 +26,6 @@ public class CR1 extends CriticalRegion{
 		getResource("B1");
 	}
 
-	@Override
-	public void execute() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void release() {
