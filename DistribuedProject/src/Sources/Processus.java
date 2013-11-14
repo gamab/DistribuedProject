@@ -184,7 +184,6 @@ public class Processus {
 		while (partIt.hasNext()) {
 			current_pid = partIt.next().getPid();
 			if (current_pid != this.pid) {
-				System.out.println("In Processus " + pid + ": getAllPidsButMine adding current_pid = " + current_pid);
 				pids.add(current_pid);
 			}
 		}
