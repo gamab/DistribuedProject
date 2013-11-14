@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.Enumeration;
 
-import Participant.Participant;
 import Participant.ParticipantList;
 
 public class DatagramCommunication {
@@ -109,36 +109,36 @@ public class DatagramCommunication {
 		return responses;
 	}
 
-//	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc2(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
-//		ArrayList<CommunicationMessage> responses = new ArrayList<CommunicationMessage>();
-//		int port = 0;
-//		boolean find = false;
-//		// for all the pid which are in the pid's list
-//		ListIterator<Integer> pidIt = pids.listIterator();
-//		while (pidIt.hasNext()) {
-//			ListIterator<Participant> partIt = participants.listIterator();
-//			int current_pid = pidIt.next();
-//			// we are searching the corresponding port to the actual pid in the Participants list
-//			while (partIt.hasNext() && !find) {
-//				Participant current_part = partIt.next();
-//				if (current_part.getPid() == current_pid) {
-//					port = current_part.getPort();
-//					find = true;					
-//				}
-//			}
-//			// then we send the message to the first pid of the list
-//			System.out.println("DatagramCommunication sendAndRetreived : SendMessage : message = " + message + " to : " + port);
-//			sendMessage(message, s, s.getLocalAddress(), port);
-//			// we retrieve the responding message from the processus we send the message to
-//			// and add it in the responses list
-//			System.out.println("DatagramCommunication sendAndRetreived : RetrievingMessages...");
-//			responses.add(retrieveMessage(s)); 
-//			System.out.println("DatagramCommunication sendAndRetreived : Retrieved message = " + responses.get(responses.size()-1).getMessage());
-//			find = false;
-//		}
-//
-//		return responses;
-//	}
+	//	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc2(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
+	//		ArrayList<CommunicationMessage> responses = new ArrayList<CommunicationMessage>();
+	//		int port = 0;
+	//		boolean find = false;
+	//		// for all the pid which are in the pid's list
+	//		ListIterator<Integer> pidIt = pids.listIterator();
+	//		while (pidIt.hasNext()) {
+	//			ListIterator<Participant> partIt = participants.listIterator();
+	//			int current_pid = pidIt.next();
+	//			// we are searching the corresponding port to the actual pid in the Participants list
+	//			while (partIt.hasNext() && !find) {
+	//				Participant current_part = partIt.next();
+	//				if (current_part.getPid() == current_pid) {
+	//					port = current_part.getPort();
+	//					find = true;					
+	//				}
+	//			}
+	//			// then we send the message to the first pid of the list
+	//			System.out.println("DatagramCommunication sendAndRetreived : SendMessage : message = " + message + " to : " + port);
+	//			sendMessage(message, s, s.getLocalAddress(), port);
+	//			// we retrieve the responding message from the processus we send the message to
+	//			// and add it in the responses list
+	//			System.out.println("DatagramCommunication sendAndRetreived : RetrievingMessages...");
+	//			responses.add(retrieveMessage(s)); 
+	//			System.out.println("DatagramCommunication sendAndRetreived : Retrieved message = " + responses.get(responses.size()-1).getMessage());
+	//			find = false;
+	//		}
+	//
+	//		return responses;
+	//	}
 
 	private static String normalize(String message) {
 		byte[] messageB = message.getBytes();
@@ -156,5 +156,14 @@ public class DatagramCommunication {
 			result[i] = messageB[i];
 		}
 		return new String(result);
+	}
+
+	public static InetAddress getOurAddressOnWlan() throws Exception {
+		Enumeration<InetAddress> n = NetworkInterface.getByName("wlan0").getInetAddresses();
+		InetAddress result = null;
+		while (n.hasMoreElements()) {
+			result = n.nextElement();
+		}
+		return result;
 	}
 }
