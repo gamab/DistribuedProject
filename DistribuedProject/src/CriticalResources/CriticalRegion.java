@@ -33,9 +33,15 @@ public abstract class CriticalRegion {
 	//we ask to be add in the waiting list of CR 
 	//then we  wait until we can get the resource
 	public void getCriticalRegion(int crid) throws Exception {
-		ArrayList<CommunicationMessage> messages = proc.sendAndRetrieveMessage("GET_CRITICAL_REGION"+"<<" + proc.getClock().getClock() + "<<", -1);
+		
+		// we create a new cell of crWaitingList for our newbie
+		CRWaitingListCell cell = new CRWaitingListCell(proc.myPid(),proc.getClock().getClock());
+		
+		// we ask to everyone to add us in there Watinglist of the CR asked for
+		ArrayList<CommunicationMessage> messages = proc.sendAndRetrieveMessage("GET_CRITICAL_REGION"+"<<"+ crid + "<<" + cell.toString() + "<<" + proc.getClock().getClock() + "<<", -1);
 		proc.retrieveClockFromMessageList(messages);
 		boolean allAgree = true;
+		
 		// if all the message retrieved say OK then you can add the proc to the waiting list of the CR
 		// else we ask again
 		for(int i = 0; i < messages.size() && allAgree; i++){
@@ -45,7 +51,6 @@ public abstract class CriticalRegion {
 				throw new Exception();
 			} 
 			if (allAgree){
-				CRWaitingListCell cell = new CRWaitingListCell(proc.myPid(),proc.getClock().getClock());
 				crWaitingList.add(cell);
 			} else {
 				getCriticalRegion(crid);
