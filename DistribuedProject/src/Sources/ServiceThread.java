@@ -34,10 +34,12 @@ public class ServiceThread extends Thread {
 
 		CommunicationMessage request = new CommunicationMessage();
 		String answer = new String();
-		while(true) {
+		while(true) {			
 			request = DatagramCommunication.retrieveMessage(serviceSocket);
+			System.out.println("In ServiceThread of proc : "+ this.pid + ", in run : Received " + request.getMessage());
 			answer = treatRequest(request.getMessage());
 			DatagramCommunication.sendMessage(answer,serviceSocket,request.getIpOrigin(),request.getPortOrigin());
+			System.out.println("In ServiceThread of proc : "+ this.pid + ", in run : Answered " + answer);
 			this.clock.incClock();
 		}
 	}
@@ -47,12 +49,11 @@ public class ServiceThread extends Thread {
 		String answer = null;
 		boolean clockOK = true;
 
-		System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : Received " + request);
 		//we split the request with "<<" to have access to the different pieces of data contained by the message
 		String[] datas = request.split("<<");
-		for (int i = 0; i<datas.length; i++) {
-			System.out.println("datas[" + i + "] = " + datas[i]	);
-		}
+//		for (int i = 0; i<datas.length; i++) {
+//			System.out.println("datas[" + i + "] = " + datas[i]	);
+//		}
 		//get the clock
 		String clockStrg = datas[datas.length-1];
 		//set the clock logically (max(x,y+1))
@@ -115,8 +116,8 @@ public class ServiceThread extends Thread {
 				}
 				//if the nro of RC is between 0 and the crWaitingLists length then it is ok
 				nroOK = nroCriticalRegion >= 0 && nroCriticalRegion < this.crWaitingLists.length;
-				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : crWaitingLists length = " + this.crWaitingLists.length);
-				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : so nroOK :" + nroOK);
+//				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : crWaitingLists length = " + this.crWaitingLists.length);
+//				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : so nroOK :" + nroOK);
 				if (nroOK){
 					String cellStrg = datas[2];
 					CRWaitingListCell cell = new CRWaitingListCell();
@@ -124,7 +125,7 @@ public class ServiceThread extends Thread {
 					if (cellOK) {
 						// we add the participant to the list
 						this.crWaitingLists[nroCriticalRegion].add(cell);
-						System.out.println("In ServiceThread : in treatRequest : crWaitingList "+ nroCriticalRegion + " : " + this.crWaitingLists[nroCriticalRegion].toString());
+						System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : adding " + cell + " to crWaitingList["+ nroCriticalRegion + "] : " + this.crWaitingLists[nroCriticalRegion].toString());
 						answer = "OK<<" + this.clock.getClock() + "<<";
 					}
 				} 
@@ -143,16 +144,19 @@ public class ServiceThread extends Thread {
 				}
 				//if the nro of RC is between 0 and the crWaitingLists length then it is ok
 				nroOK = nroCriticalRegion >= 0 && nroCriticalRegion < this.crWaitingLists.length;
-				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : crWaitingLists length = " + this.crWaitingLists.length);
-				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : so nroOK :" + nroOK);
+//				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : crWaitingLists length = " + this.crWaitingLists.length);
+//				System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : so nroOK :" + nroOK);
 				if (nroOK){
 					String cellStrg = datas[2];
 					CRWaitingListCell cell = new CRWaitingListCell();
 					cellOK = cell.fromString(cellStrg);
 					if (cellOK) {
-						// we add the participant to the list
-						this.crWaitingLists[nroCriticalRegion].remove(cell);
-						System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : crWaitingList "+ nroCriticalRegion + " : " + this.crWaitingLists[nroCriticalRegion].toString());
+						// we remove the participant to the list
+						Integer position = this.crWaitingLists[nroCriticalRegion].getPosition(cell);
+						if (position != null) {
+							this.crWaitingLists[nroCriticalRegion].remove((int)position);
+							System.out.println("In ServiceThread of proc : "+ this.pid + ", in treatRequest : removing " + cell + " from crWaitingList["+ nroCriticalRegion + "] : " + this.crWaitingLists[nroCriticalRegion].toString());
+						}
 						answer = "OK<<" + this.clock.getClock() + "<<";
 					}
 				} 
