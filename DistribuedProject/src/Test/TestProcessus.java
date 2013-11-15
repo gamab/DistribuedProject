@@ -22,17 +22,21 @@ public class TestProcessus {
 			//		System.out.println("############################");
 			//		testProcessus_2();
 			//		System.out.println("############################");
-			//			testProcessus_3();
-			//			System.out.println("############################");
-			testProcessus_4();
-			System.out.println("############################");
+			//		testProcessus_3();
+			//		System.out.println("############################");
+//						testProcessus_4();
+//						System.out.println("############################");
 			//		testProcessus_5();
 			//		System.out.println("############################");
 			//		testProcessus_6();
 			//		System.out.println("############################");
 			//		testProcessus_7();
 			//		System.out.println("############################");
-			testProcessus_8();
+			//		testProcessus_8();
+			//		System.out.println("############################");
+			testProcessus_9();
+			System.out.println("############################");
+			testProcessus_10();
 			System.out.println("############################");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -40,7 +44,7 @@ public class TestProcessus {
 		}
 	}
 
-	public static void testProcessus_1() {
+	public static void testProcessus_1() throws Exception {
 		System.out.println("Test n°1");
 		System.out.println("Description : Test that make does not crash");
 		System.out.println("Description : ");
@@ -147,7 +151,7 @@ public class TestProcessus {
 	}
 
 
-	public static void testProcessus_5() {
+	public static void testProcessus_5() throws Exception {
 		System.out.println("Test n°5");
 		System.out.println("Description : Test whoHasResource");
 		System.out.println("Description : ");
@@ -174,7 +178,7 @@ public class TestProcessus {
 		}		
 	}
 
-	public static void testProcessus_6() {
+	public static void testProcessus_6() throws Exception {
 		System.out.println("Test n°6");
 		System.out.println("Description : Test whoHasResource with a ressource not inside the resource list");
 		System.out.println("Description : ");
@@ -201,7 +205,7 @@ public class TestProcessus {
 		}		
 	}
 
-	public static void testProcessus_7() {
+	public static void testProcessus_7() throws Exception {
 		System.out.println("Test n°7");
 		System.out.println("Description : Test whoIsHeadOfCRWaitingList with no one in the CRWaitingList");
 		System.out.println("Description : ");
@@ -219,7 +223,7 @@ public class TestProcessus {
 			ParticipantList participants = new ParticipantList();
 			int pid = 1900;
 			LogicalClock clock = new LogicalClock();
-			Participant first = new Participant(pid, Processus.portDefault, resourcesList);
+			Participant first = new Participant(pid,Processus.portDefault,s.getLocalAddress(),resourcesList);
 			participants.add(first);
 			ServiceThread serviceT = new ServiceThread(s, crList, resources , participants, pid, clock);
 			serviceT.start();
@@ -247,7 +251,7 @@ public class TestProcessus {
 		}		
 	}
 
-	public static void testProcessus_8() {
+	public static void testProcessus_8() throws Exception {
 		System.out.println("Test n°8");
 		System.out.println("Description : Test whoIsHeadOfCRWaitingList with someone in the CRWaitingList");
 		System.out.println("Description : ATTENTION COPYING WHAT IS INSIDE THE FUNCTION FOR THE TEST. NOT REALLY CALLING THE FUNCTION");
@@ -265,14 +269,14 @@ public class TestProcessus {
 			ParticipantList participants = new ParticipantList();
 			int pid = 1900;
 			LogicalClock clock = new LogicalClock();
-			Participant first = new Participant(pid, Processus.portDefault, resourcesList);
+			Participant first = new Participant(pid,Processus.portDefault,s.getLocalAddress(),resourcesList);
 			participants.add(first);
 			ServiceThread serviceT = new ServiceThread(s, crList, resources , participants, pid, clock);
 			serviceT.start();
 
 			Processus proc = new Processus(1920);
 			CRWaitingListCell cell = new CRWaitingListCell(1920,proc.getClock().getClock());
-			proc.sendAndRetrieveOneMessage("GET_CRITICAL_REGION<<1<<"+cell+"<<"+ proc.getClock().getClock(), Processus.portDefault);
+			proc.sendAndRetrieveOneMessage("GET_CRITICAL_REGION<<1<<"+cell+"<<"+ proc.getClock().getClock(),s.getLocalAddress(), Processus.portDefault);
 
 
 			int pid_r = crList[1].get(0).getPid();
@@ -295,5 +299,48 @@ public class TestProcessus {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
+	}
+	
+	public static void testProcessus_9() {
+		System.out.println("Test n°9");
+		System.out.println("Description : Test of random");
+		System.out.println("Description : ");
+		
+		int random = Processus.randomInRange(0, 10);
+		if (random <= 10 && random >= 0) {
+			System.out.println("Test OK");
+		} else {
+			System.out.println("Test failes");
+		}
+	}
+	
+	public static void testProcessus_10() {
+		System.out.println("Test n°10");
+		System.out.println("Description : Test of random");
+		System.out.println("Description : ");
+		int random = Processus.randomInRange(0, 2);
+		int zeros = 0;
+		int ones = 0;
+		int twos = 0;
+		for (int i=0; i<9999999; i++) {
+			 random = Processus.randomInRange(0, 2);
+			 if (random == 0) {
+				 zeros++;
+			 }
+			 else if (random == 1) {
+				 ones++;
+			 }
+			 else if (random == 2) {
+				 twos++;
+			 }
+		}
+		System.out.println("Zeros : " + zeros/(double)(zeros+ones+twos));
+		System.out.println("Ones  : " + ones/(double)(zeros+ones+twos));
+		System.out.println("Twos  : " + twos/(double)(zeros+ones+twos));
+		if (random <= 10 && random >= 0) {
+			System.out.println("Test OK");
+		} else {
+			System.out.println("Test failes");
+		}
 	}
 }

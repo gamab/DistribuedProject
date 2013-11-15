@@ -25,6 +25,20 @@ public class TestCRWaitingList {
 		System.out.println("############################");
 		testCRWaitingList_8();
 		System.out.println("############################");
+		testCRWaitingList_9();
+		System.out.println("############################");
+		testCRWaitingList_10();
+		System.out.println("############################");
+		testCRWaitingList_11();
+		System.out.println("############################");
+		testCRWaitingList_12();
+		System.out.println("############################");
+		testCRWaitingList_13();
+		System.out.println("############################");
+		testCRWaitingList_14();
+		System.out.println("############################");
+		testCRWaitingList_15();
+		System.out.println("############################");
 	}
 
 	public static void testCRWaitingList_1() {
@@ -225,4 +239,174 @@ public class TestCRWaitingList {
 			System.out.println("Test failed");
 		}
 	}	
+	
+	public static void testCRWaitingList_9() {
+		System.out.println("Test n°9");
+		System.out.println("Description : Test get_position() first");
+		System.out.println("Description : ");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1902//20:::1904//30";
+		boolean resConvertion = list.fromString(listString);
+		CRWaitingListCell cell = new CRWaitingListCell(1900,10);
+		
+		String attendu = "1900//10 in position 0";
+		String obtenu = cell.toString() + " in position " + list.getPosition(cell);
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}	
+	public static void testCRWaitingList_10() {
+		System.out.println("Test n°10");
+		System.out.println("Description : Test get_position() second");
+		System.out.println("Description : ");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1902//20:::1904//30";
+		boolean resConvertion = list.fromString(listString);
+		CRWaitingListCell cell = new CRWaitingListCell(1902,20);
+		
+		String attendu = "1902//20 in position 1";
+		String obtenu = cell.toString() + " in position " + list.getPosition(cell);
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}	
+	public static void testCRWaitingList_11() {
+		System.out.println("Test n°11");
+		System.out.println("Description : Test get_position() last");
+		System.out.println("Description : ");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1902//20:::1904//30";
+		boolean resConvertion = list.fromString(listString);
+		CRWaitingListCell cell = new CRWaitingListCell(1904,30);
+		
+		String attendu = "1904//30 in position 2";
+		String obtenu = cell.toString() + " in position " + list.getPosition(cell);
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}	
+	
+	public static void testCRWaitingList_12() {
+		System.out.println("Test n°12");
+		System.out.println("Description : Test get_position() non present");
+		System.out.println("Description : ");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1902//20:::1904//30";
+		boolean resConvertion = list.fromString(listString);
+		CRWaitingListCell cell = new CRWaitingListCell(1903,30);
+		
+		String attendu = "1904//30 in position null";
+		String obtenu = cell.toString() + " in position " + list.getPosition(cell);
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}	
+
+	public static void testCRWaitingList_13() {
+		System.out.println("Test n°13");
+		System.out.println("Description : Test remove on first");
+		System.out.println("Description : ");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1902//20:::1904//30";
+		boolean resConvertion = list.fromString(listString);
+		CRWaitingListCell cell = new CRWaitingListCell(1900,10);
+		Integer position = list.getPosition(cell);
+		list.remove((int) position);
+		String attendu = "1902//20:::1904//30";
+		String obtenu = list.toString();
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}		public static void testCRWaitingList_14() {
+		System.out.println("Test n°14");
+		System.out.println("Description : Test remove on second");
+		System.out.println("Description : ");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1902//20:::1904//30";
+		boolean resConvertion = list.fromString(listString);
+		CRWaitingListCell cell = new CRWaitingListCell(1902,20);
+		Integer position = list.getPosition(cell);
+		list.remove((int) position);
+		
+		String attendu = "1900//10:::1904//30";
+		String obtenu = list.toString();
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}	
+	
+	public static void testCRWaitingList_15() {
+		System.out.println("Test n°15");
+		System.out.println("Description : Test remove on last");
+		System.out.println("Description : ");
+		
+		
+		CRWaitingList list = new CRWaitingList();
+		String listString = "1900//10:::1902//20:::1904//30";
+		boolean resConvertion = list.fromString(listString);
+		CRWaitingListCell cell = new CRWaitingListCell(1904,30);
+		Integer position = list.getPosition(cell);
+		list.remove((int) position);
+		
+		String attendu = "1900//10:::1902//20";
+		String obtenu = list.toString();
+		System.out.println("Attendu : " + attendu);
+		System.out.println("Obtenu  : " + obtenu);
+		
+		if (attendu.equals(obtenu)) {
+			System.out.println("Test OK");
+		}
+		else {
+			System.out.println("Test failed");
+		}
+	}	
+	
 }

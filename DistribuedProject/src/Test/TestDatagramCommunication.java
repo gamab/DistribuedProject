@@ -1,7 +1,9 @@
 package Test;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -14,19 +16,23 @@ import Participant.ParticipantList;
 public class TestDatagramCommunication {
 
 	public static void runTest() {
-		System.out.println("#################################");
-		System.out.println("## TEST DATAGRAM COMMUNICATION ##");
-		System.out.println("#################################");
-		testDatagramCommunication_1();
-		System.out.println("############################");
-		testDatagramCommunication_2();
-		System.out.println("############################");
-		testDatagramCommunication_3();
-		System.out.println("############################");
-		testDatagramCommunication_4();
-		System.out.println("############################");
-		testDatagramCommunication_5();
-		System.out.println("############################");
+		try {
+			System.out.println("#################################");
+			System.out.println("## TEST DATAGRAM COMMUNICATION ##");
+			System.out.println("#################################");
+			testDatagramCommunication_1();
+			System.out.println("############################");
+			testDatagramCommunication_2();
+			System.out.println("############################");
+			testDatagramCommunication_3();
+			System.out.println("############################");
+			testDatagramCommunication_4();
+			System.out.println("############################");
+			testDatagramCommunication_5();
+			System.out.println("############################");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void testDatagramCommunication_1() {
@@ -150,7 +156,7 @@ public class TestDatagramCommunication {
 
 	}
 
-	public static void testDatagramCommunication_4() {
+	public static void testDatagramCommunication_4() throws UnknownHostException {
 		System.out.println("Test n°4");
 		System.out.println("Description : Test send and retreive message to multiple pids");
 		System.out.println("Description : Sending a small message");
@@ -160,8 +166,8 @@ public class TestDatagramCommunication {
 			int port2 = 54385;
 			ArrayList<Integer> listPids = new ArrayList();
 			ParticipantList participants = new ParticipantList();
-			Participant participant1 = new Participant(2,port1);
-			Participant participant2 = new Participant(3,port2);
+			Participant participant1 = new Participant(2,port1,s1.getLocalAddress());
+			Participant participant2 = new Participant(3,port2,s1.getLocalAddress());
 			listPids.add(participant1.getPid());
 			listPids.add(participant2.getPid());
 			participants.add(participant1);
@@ -204,7 +210,7 @@ public class TestDatagramCommunication {
 		}
 	}
 
-	public static void testDatagramCommunication_5() {
+	public static void testDatagramCommunication_5() throws UnknownHostException {
 		System.out.println("Test n°5");
 		System.out.println("Description : Test send and retreive message to one pid");
 		System.out.println("Description : Sending a small message");
@@ -213,7 +219,7 @@ public class TestDatagramCommunication {
 			int port1 = 50000;
 			ArrayList<Integer> listPids = new ArrayList();
 			ParticipantList participants = new ParticipantList();
-			Participant participant1 = new Participant(2,port1);
+			Participant participant1 = new Participant(2,port1,s1.getLocalAddress());
 			listPids.add(participant1.getPid());
 			participants.add(participant1);
 			ArrayList<CommunicationMessage> messageRead = new ArrayList();
