@@ -18,10 +18,11 @@ public class CRWaitingList extends SortedList<CRWaitingListCell> {
     	while (it.hasNext() && result==null){
     		CRWaitingListCell current = it.next();
     		if (current.equals(e)) {
-    			System.out.println("In SortedList : " + current + " == " + e);
+    			System.out.println("In CRWaitingList : " + current + " == " + e);
     			result = i;
     		} else {
-    			System.out.println("In SortedList : " + current + " != " + e);
+    			System.out.println("In CRWaitingList : " + current + " != " + e);
+    			i++;
     		}
     	}
 		return result;

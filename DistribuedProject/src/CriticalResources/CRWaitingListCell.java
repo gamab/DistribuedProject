@@ -49,8 +49,8 @@ public class CRWaitingListCell implements Comparable<CRWaitingListCell> {
 	}
 	
 
-	public boolean equals(CRWaitingListCell a, CRWaitingListCell b) {
-		if (a.clock == b.clock && a.pid == b.pid) {
+	public boolean equals(CRWaitingListCell b) {
+		if (this.clock == b.clock && this.pid == b.pid) {
 			return true;
 		} else {
 			return false;
