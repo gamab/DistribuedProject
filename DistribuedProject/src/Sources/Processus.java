@@ -64,8 +64,9 @@ public class Processus {
 			serviceThreadSocket = new DatagramSocket(0);
 			System.out.println("In Processus "+ pid +": Rejected => Creating serviceThreadSocket on port :" + serviceThreadSocket.getLocalPort());
 			// now we ask to the processus listening on the port 54321 the actual list of participants 
-			System.out.println("In Processus "+ pid +": Asking participants to the first processus.");
-			CommunicationMessage message = sendAndRetrieveOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",portDefault);
+			InetAddress broadcastAddress = DatagramCommunication.getOurBroadcastAddressOnWlan();
+			System.out.println("In Processus "+ pid +": Asking participants to the first processus on " + broadcastAddress + ":" + this.portDefault);
+			CommunicationMessage message = sendAndRetrieveOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",broadcastAddress,portDefault);
 			retrieveClockFromMessage(message);
 			// we actualize our own list of participants
 			System.out.print("In Processus "+ pid +": Updating our list :");
@@ -131,16 +132,21 @@ public class Processus {
 			}
 			//we start our loop
 			while (true) {
-				CriticalRegion cr = criticalRegion[randomInRange(0,criticalRegion.length-1)];
+				int randomCr = randomInRange(0,criticalRegion.length-1);
+				CriticalRegion cr = criticalRegion[randomCr];
 				Thread.currentThread().sleep(2000);
 				try {
+					System.out.println("In Processus "+ pid +": run : asking to enter CR[" + randomCr + "]");
 					cr.enter();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				System.out.println("In Processus "+ pid +": run : entered now executing CR[" + randomCr + "]");
 				cr.execute();
+				System.out.println("In Processus "+ pid +": run : executed now releasing CR[" + randomCr + "]");
 				cr.release();
+				System.out.println("In Processus "+ pid +": run : released CR[" + randomCr + "]");
 			}
 
 		} catch (InterruptedException e) {
@@ -164,7 +170,7 @@ public class Processus {
 		boolean findIt = false;
 		// we search into the list of participants
 		for (int i = 0 ; i < participants.size() && !findIt ; i++){
-			System.out.println("In Processus " + this.pid + ": searching who has the ressource " + resource+ " :" + participants.get(i) + "?");
+			//System.out.println("In Processus " + this.pid + ": searching who has the ressource " + resource+ " :" + participants.get(i) + "?");
 			// the participant who has the resource give his pid
 			if (participants.get(i).hasTheResource(resource)){
 				result = participants.get(i).getPid();
@@ -220,15 +226,15 @@ public class Processus {
 		} else {
 			pids.add(pid);
 		}
-		System.out.println("In Processus " + this.pid + ": sendAndRetrieveMessage sending message to pids = " + pids + ". With participants : " + this.participants);
+		//System.out.println("In Processus " + this.pid + ": sendAndRetrieveMessage sending message to pids = " + pids + ". With participants : " + this.participants);
 		messages = DatagramCommunication.sendAndRetreivedMessagesToMultipleProc(message, this.socket, pids, this.participants);
 		this.clock.incClock();
 		return messages;
 	}
 
 	//Send a message to a given port
-	public CommunicationMessage sendAndRetrieveOneMessage(String message, int port) {
-		DatagramCommunication.sendMessage(message, this.socket, this.socket.getLocalAddress(), port);
+	public CommunicationMessage sendAndRetrieveOneMessage(String message, InetAddress ip, int port) {
+		DatagramCommunication.sendMessage(message, this.socket, ip, port);
 		this.clock.incClock();
 		CommunicationMessage answer = DatagramCommunication.retrieveMessage(this.socket);
 		return answer;
@@ -260,6 +266,22 @@ public class Processus {
 
 	//Return a random number between begin and end
 	public static int randomInRange(int begin, int end) {
-		return (int) (Math.random()*(end-begin) + begin);
+		double random = Math.random();
+		int range = end - begin;
+		double randRange = random * range + begin;
+		double step = range/((double)range+1);
+		int result = 0;
+		int randUp = (int) Math.ceil(randRange);
+		
+		if (randRange > (double)randUp*step) {
+			result = randUp;
+		}
+		else {
+			result = randUp - 1;
+		}
+
+		
+		return result;
 	}
+	
 }
