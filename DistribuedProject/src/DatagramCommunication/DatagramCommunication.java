@@ -84,6 +84,7 @@ public class DatagramCommunication {
 	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
 		ArrayList<CommunicationMessage> responses = new ArrayList<CommunicationMessage>();
 		int port = 0;
+		InetAddress ip = null;
 		boolean find = false;
 		// for all the pid which are in the pid's list
 		for (int i = 0 ; i < pids.size() ; i++){
@@ -93,16 +94,17 @@ public class DatagramCommunication {
 				if (participants.get(j).getPid()==current_pid){
 					find = true;
 					port = participants.get(j).getPort();
+					ip = participants.get(j).getIp();
 				}
 			}
 			// then we send the message to the first pid of the list
-			System.out.println("DatagramCommunication sendAndRetreived : send message : message = " + message + " to : " + port);
-			sendMessage(message, s, s.getLocalAddress(), port);
+			//System.out.println("DatagramCommunication sendAndRetreived : send message : message = " + message + " to " + ip.getHostAddress() + ":" + port);
+			sendMessage(message, s, ip, port);
 			// we retrieve the responding message from the processus we send the message to
 			// and add it in the responses list
-			System.out.println("DatagramCommunication sendAndRetreived : RetrievingMessages...");
+			//System.out.println("DatagramCommunication sendAndRetreived : RetrievingMessages...");
 			responses.add(retrieveMessage(s)); 
-			System.out.println("DatagramCommunication sendAndRetreived : Retrieved message = " + responses.get(responses.size()-1).getMessage());
+			//System.out.println("DatagramCommunication sendAndRetreived : Retrieved message = " + responses.get(responses.size()-1).getMessage());
 			find = false;
 		}
 
@@ -165,5 +167,11 @@ public class DatagramCommunication {
 			result = n.nextElement();
 		}
 		return result;
+	}
+	
+	public static InetAddress getOurBroadcastAddressOnWlan() throws Exception {
+		byte[] ourIp = getOurAddressOnWlan().getAddress();
+		ourIp[ourIp.length-1] = (byte) 255;
+		return InetAddress.getByAddress(ourIp);
 	}
 }
