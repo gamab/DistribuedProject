@@ -1,9 +1,9 @@
 package Sources;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
@@ -22,7 +22,7 @@ public class Processus {
 	public static int portDefault = 54321;
 	public static int ANY = -1;
 	public static int NONE = -2;
-	
+
 	private Integer pid;
 	private ParticipantList participants;
 	private CriticalRegion[] criticalRegion;
@@ -51,27 +51,21 @@ public class Processus {
 		this.resources = new String[2];
 		System.out.println("In Processus "+ pid +": Creating the processus.");		
 		this.socket = new DatagramSocket(0);
+		System.out.println("In Processus "+ pid +": Creating our socket to send request and retrieve answers.");		
 
-		try{
+		// if we can retrieve Participants from first it means that we are not the first processus else it means we are
+		if (!retrieveParticipantsFromFirst()) {
 			// if it's the first processus we listen on port 54321 and we give him a1, b2
-			System.out.println("In Processus "+ pid +": Creating serviceThreadSocket on port :" + portDefault);
+			System.out.println("In Processus "+ pid +": there is no first => Creating serviceThreadSocket on port :" + portDefault);
 			serviceThreadSocket = new DatagramSocket(portDefault);
 			System.out.println("In Processus "+ pid +": Creating processus ressources.");
 			this.resources[0] = "a1";
 			this.resources[1] = "b2";
-		}catch (SocketException e){
+		} else {
 			//if it's already used we listen to another random port
 			serviceThreadSocket = new DatagramSocket(0);
-			System.out.println("In Processus "+ pid +": Rejected => Creating serviceThreadSocket on port :" + serviceThreadSocket.getLocalPort());
-			// now we ask to the processus listening on the port 54321 the actual list of participants 
-			InetAddress broadcastAddress = DatagramCommunication.getOurBroadcastAddressOnWlan();
-			System.out.println("In Processus "+ pid +": Asking participants to the first processus on " + broadcastAddress + ":" + this.portDefault);
-			CommunicationMessage message = sendAndRetrieveOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",broadcastAddress,portDefault);
-			retrieveClockFromMessage(message);
-			// we actualize our own list of participants
-			System.out.print("In Processus "+ pid +": Updating our list :");
-			this.participants.fromString(message.getMessage().split("<<")[1]);	
-			System.out.println(participants);
+			System.out.println("In Processus "+ pid +": there is a first => Creating serviceThreadSocket on port :" + serviceThreadSocket.getLocalPort());
+
 			// if we are the second processus we take the following resources
 			System.out.println("In Processus "+ pid +": Creating processus ressources.");
 			if (this.participants.size() == 1) {
@@ -117,6 +111,33 @@ public class Processus {
 		System.out.println("In Processus "+ pid +": Creating our serviceThread.");
 		this.serviceThread = new ServiceThread(serviceThreadSocket, crWaitingLists, this.resources,this.participants, this.pid,this.clock);
 
+	}
+
+	// Returns true if there is a first that gave us the participants and false if there is not
+	private boolean retrieveParticipantsFromFirst() throws Exception {
+		boolean result = true;
+
+		// We set a timeout to 1000ms. If in 1000ms we didn't receive the participant list we assume that we are the fist
+		this.socket.setSoTimeout(1000);
+
+		try {
+			// now we ask to the processus listening on the port 54321 the actual list of participants 
+			InetAddress broadcastAddress = DatagramCommunication.getOurBroadcastAddressOnWlan();
+			System.out.println("In Processus "+ pid +": retrieveParticipantsFromFirst : Asking participants to the first processus on " + broadcastAddress + ":" + this.portDefault);
+			CommunicationMessage message = sendAndRetrieveOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",broadcastAddress,portDefault);
+			retrieveClockFromMessage(message);
+			// we actualize our own list of participants
+			System.out.print("In Processus "+ pid +": retrieveParticipantsFromFirst : Updating our list :");
+			this.participants.fromString(message.getMessage().split("<<")[1]);	
+			System.out.println(participants);
+		} catch (SocketTimeoutException e) {
+			result = false;
+			System.out.println("In Processus : in retrieveParticipantsFromFirst : First did not answer in time.");
+		}
+
+		this.socket.setSoTimeout(0);
+		
+		return result;
 	}
 
 	//What our program has to do
@@ -179,7 +200,7 @@ public class Processus {
 		}
 		return result;
 	}
-	
+
 	//returns the pid of the processus who is head of the cr
 	//returns NONE if no one has the resource
 	public int whoIsHeadOfCRWaitingList(int crid){
@@ -218,7 +239,7 @@ public class Processus {
 	}
 
 	//Send a message to ANY if pid = this.ANY or just the given pid
-	public ArrayList<CommunicationMessage> sendAndRetrieveMessage(String message, int pid) {
+	public ArrayList<CommunicationMessage> sendAndRetrieveMessage(String message, int pid) throws IOException {
 		ArrayList<CommunicationMessage> messages = new ArrayList<CommunicationMessage>();
 		ArrayList<Integer> pids = new ArrayList<Integer>();
 		if (pid == ANY) {
@@ -233,7 +254,7 @@ public class Processus {
 	}
 
 	//Send a message to a given port
-	public CommunicationMessage sendAndRetrieveOneMessage(String message, InetAddress ip, int port) {
+	public CommunicationMessage sendAndRetrieveOneMessage(String message, InetAddress ip, int port) throws IOException {
 		DatagramCommunication.sendMessage(message, this.socket, ip, port);
 		this.clock.incClock();
 		CommunicationMessage answer = DatagramCommunication.retrieveMessage(this.socket);
@@ -272,16 +293,14 @@ public class Processus {
 		double step = range/((double)range+1);
 		int result = 0;
 		int randUp = (int) Math.ceil(randRange);
-		
+
 		if (randRange > (double)randUp*step) {
 			result = randUp;
 		}
 		else {
 			result = randUp - 1;
-		}
-
-		
+		}		
 		return result;
 	}
-	
+
 }
