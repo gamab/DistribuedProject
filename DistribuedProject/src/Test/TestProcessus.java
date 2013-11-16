@@ -252,55 +252,55 @@ public class TestProcessus {
 		}		
 	}
 
-	public static void testProcessus_8() throws Exception {
-		System.out.println("Test n°8");
-		System.out.println("Description : Test whoIsHeadOfCRWaitingList with someone in the CRWaitingList");
-		System.out.println("Description : ATTENTION COPYING WHAT IS INSIDE THE FUNCTION FOR THE TEST. NOT REALLY CALLING THE FUNCTION");
-		try {
-			DatagramSocket s = new DatagramSocket(Processus.portDefault);
-			CRWaitingList[] crList = new CRWaitingList[3];
-			crList[0] = new CRWaitingList();
-			crList[1] = new CRWaitingList();
-			crList[2] = new CRWaitingList();
-			String[] resources = {"a1","b2"};
-			ArrayList<String> resourcesList = new ArrayList<String>();
-			for (int i=0; i<resources.length; i++) {
-				resourcesList.add(resources[i]);
-			}
-			ParticipantList participants = new ParticipantList();
-			int pid = 1900;
-			LogicalClock clock = new LogicalClock();
-			Participant first = new Participant(pid,Processus.portDefault,s.getLocalAddress(),resourcesList);
-			participants.add(first);
-			ServiceThread serviceT = new ServiceThread(s, crList, resources , participants, pid, clock);
-			serviceT.start();
-
-			Processus proc = new Processus(1920);
-			CRWaitingListCell cell = new CRWaitingListCell(1920,proc.getClock().getClock());
-			proc.sendAndRetrieveOneMessage("GET_CRITICAL_REGION<<1<<"+cell+"<<"+ proc.getClock().getClock(),s.getLocalAddress(), Processus.portDefault);
-
-
-			int pid_r = crList[1].get(0).getPid();
-			String result = String.valueOf(pid_r);
-
-			String attendu = "1920";
-			String obtenu = result;
-			serviceT.stop();
-
-			System.out.println("Attendu : " + attendu);
-			System.out.println("Obtenu  : " + obtenu);
-
-			if (attendu.equals(obtenu)) {
-				System.out.println("Test OK");
-			}
-			else {
-				System.out.println("Test failed");
-			}		
-		} catch (SocketException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
-	}
+//	public static void testProcessus_8() throws Exception {
+//		System.out.println("Test n°8");
+//		System.out.println("Description : Test whoIsHeadOfCRWaitingList with someone in the CRWaitingList");
+//		System.out.println("Description : ATTENTION COPYING WHAT IS INSIDE THE FUNCTION FOR THE TEST. NOT REALLY CALLING THE FUNCTION");
+//		try {
+//			DatagramSocket s = new DatagramSocket(Processus.portDefault);
+//			CRWaitingList[] crList = new CRWaitingList[3];
+//			crList[0] = new CRWaitingList();
+//			crList[1] = new CRWaitingList();
+//			crList[2] = new CRWaitingList();
+//			String[] resources = {"a1","b2"};
+//			ArrayList<String> resourcesList = new ArrayList<String>();
+//			for (int i=0; i<resources.length; i++) {
+//				resourcesList.add(resources[i]);
+//			}
+//			ParticipantList participants = new ParticipantList();
+//			int pid = 1900;
+//			LogicalClock clock = new LogicalClock();
+//			Participant first = new Participant(pid,Processus.portDefault,s.getLocalAddress(),resourcesList);
+//			participants.add(first);
+//			ServiceThread serviceT = new ServiceThread(s, crList, resources , participants, pid, clock);
+//			serviceT.start();
+//
+//			Processus proc = new Processus(1920);
+//			CRWaitingListCell cell = new CRWaitingListCell(1920,proc.getClock().getClock());
+//			proc.sendAndRetrieveOneMessage("GET_CRITICAL_REGION<<1<<"+cell+"<<"+ proc.getClock().getClock(),s.getLocalAddress(), Processus.portDefault);
+//
+//
+//			int pid_r = crList[1].get(0).getPid();
+//			String result = String.valueOf(pid_r);
+//
+//			String attendu = "1920";
+//			String obtenu = result;
+//			serviceT.stop();
+//
+//			System.out.println("Attendu : " + attendu);
+//			System.out.println("Obtenu  : " + obtenu);
+//
+//			if (attendu.equals(obtenu)) {
+//				System.out.println("Test OK");
+//			}
+//			else {
+//				System.out.println("Test failed");
+//			}		
+//		} catch (SocketException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}		
+//	}
 	
 	public static void testProcessus_9() {
 		System.out.println("Test n°9");

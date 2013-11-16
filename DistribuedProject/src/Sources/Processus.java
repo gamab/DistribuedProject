@@ -124,7 +124,8 @@ public class Processus {
 			// now we ask to the processus listening on the port 54321 the actual list of participants 
 			InetAddress broadcastAddress = DatagramCommunication.getOurBroadcastAddressOnWlan();
 			System.out.println("In Processus "+ pid +": retrieveParticipantsFromFirst : Asking participants to the first processus on " + broadcastAddress + ":" + this.portDefault);
-			CommunicationMessage message = sendAndRetrieveOneMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",broadcastAddress,portDefault);
+			DatagramCommunication.sendMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",this.socket, broadcastAddress, portDefault);
+			CommunicationMessage message = DatagramCommunication.retrieveMessage(this.socket);
 			retrieveClockFromMessage(message);
 			// we actualize our own list of participants
 			System.out.print("In Processus "+ pid +": retrieveParticipantsFromFirst : Updating our list :");
@@ -238,7 +239,7 @@ public class Processus {
 		return pids;
 	}
 
-	//Send a message to ANY if pid = this.ANY or just the given pid
+	//Send a message to ANY if pid = this.ANY or just the given pid and retrieve the answer
 	public ArrayList<CommunicationMessage> sendAndRetrieveMessage(String message, int pid) throws IOException {
 		ArrayList<CommunicationMessage> messages = new ArrayList<CommunicationMessage>();
 		ArrayList<Integer> pids = new ArrayList<Integer>();
@@ -253,13 +254,13 @@ public class Processus {
 		return messages;
 	}
 
-	//Send a message to a given port
-	public CommunicationMessage sendAndRetrieveOneMessage(String message, InetAddress ip, int port) throws IOException {
-		DatagramCommunication.sendMessage(message, this.socket, ip, port);
-		this.clock.incClock();
-		CommunicationMessage answer = DatagramCommunication.retrieveMessage(this.socket);
-		return answer;
-	}
+	//Send a message to a given ip and port and retrieve the answer
+//	public CommunicationMessage sendAndRetrieveOneMessage(String message, InetAddress ip, int port) throws IOException {
+//		DatagramCommunication.sendMessage(message, this.socket, ip, port);
+//		this.clock.incClock();
+//		CommunicationMessage answer = DatagramCommunication.retrieveMessage(this.socket);
+//		return answer;
+//	}
 
 	//Retrieve the clock from a list of messages
 	public void retrieveClockFromMessageList(ArrayList<CommunicationMessage> messages) {
