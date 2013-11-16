@@ -1,12 +1,11 @@
-package Test;
+package Sources;
 
-import Sources.Processus;
 
-public class TestProcessusThread extends Thread {
+public class ProcessusThread extends Thread {
 
 	Processus proc;
 	
-	public TestProcessusThread(Processus proc) {
+	public ProcessusThread(Processus proc) {
 		this.proc = proc;		
 	}
 	

@@ -10,6 +10,7 @@ import Participant.Participant;
 import Participant.ParticipantList;
 import Sources.LogicalClock;
 import Sources.Processus;
+import Sources.ProcessusThread;
 import Sources.ServiceThread;
 
 public class TestProcessus {
@@ -98,7 +99,7 @@ public class TestProcessus {
 		System.out.println("Description : ");
 		try {
 			Processus proc = new Processus(1900);
-			TestProcessusThread tProc = new TestProcessusThread(proc);
+			ProcessusThread tProc = new ProcessusThread(proc);
 			tProc.start();
 			Processus proc2 = new Processus(1902);
 			proc2.run();
@@ -125,10 +126,10 @@ public class TestProcessus {
 		System.out.println("Description : ");
 		try {
 			Processus proc = new Processus(1900);
-			TestProcessusThread tProc = new TestProcessusThread(proc);
+			ProcessusThread tProc = new ProcessusThread(proc);
 			tProc.start();
 			Processus proc2 = new Processus(1904);
-			TestProcessusThread tProc2 = new TestProcessusThread(proc2);
+			ProcessusThread tProc2 = new ProcessusThread(proc2);
 			tProc2.start();
 			Processus proc3 = new Processus(1902);
 			proc3.run();

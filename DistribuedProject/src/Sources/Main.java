@@ -1,7 +1,6 @@
 package Sources;
 import java.util.Scanner;
 
-import Test.TestProcessusThread;
 
 
 public class Main {
@@ -37,12 +36,12 @@ public class Main {
 				pid[i] = -1;
 			}
 		}
-		TestProcessusThread[] proc = new TestProcessusThread[3];
+		ProcessusThread[] proc = new ProcessusThread[3];
 		try {
 			for (int i = 0; i < 3; i++) {
 				if (pid[i]!=-1) {
 					System.out.println("Launching processus " + pid[i]);
-					proc[i] = new TestProcessusThread(new Processus(pid[i]));
+					proc[i] = new ProcessusThread(new Processus(pid[i]));
 					proc[i].start();
 				}
 			}
