@@ -125,6 +125,7 @@ public class Processus {
 			InetAddress broadcastAddress = DatagramCommunication.getOurBroadcastAddressOnWlan();
 			System.out.println("In Processus "+ pid +": retrieveParticipantsFromFirst : Asking participants to the first processus on " + broadcastAddress + ":" + this.portDefault);
 			DatagramCommunication.sendMessage("GET_PARTICIPANTS<<" + this.clock.getClock() + "<<",this.socket, broadcastAddress, portDefault);
+			this.clock.incClock();
 			CommunicationMessage message = DatagramCommunication.retrieveMessage(this.socket);
 			retrieveClockFromMessage(message);
 			// we actualize our own list of participants
