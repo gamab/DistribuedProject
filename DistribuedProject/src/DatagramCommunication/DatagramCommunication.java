@@ -46,7 +46,7 @@ public class DatagramCommunication {
 		}
 	}
 
-	public static CommunicationMessage retrieveMessage(DatagramSocket s) {
+	public static CommunicationMessage retrieveMessage(DatagramSocket s) throws IOException {
 		CommunicationMessage message = new CommunicationMessage();
 
 		String bufferReceive_inString = new String();
@@ -57,15 +57,9 @@ public class DatagramCommunication {
 			DatagramPacket receivedPack = new DatagramPacket(bufferReceive,bufferReceive.length);
 
 			//reception of a packet from the server
-			try {
-				s.receive(receivedPack);
-				bufferReceive = receivedPack.getData();
-				bufferReceive_inString = new String(bufferReceive);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			s.receive(receivedPack);
+			bufferReceive = receivedPack.getData();
+			bufferReceive_inString = new String(bufferReceive);
 			//adding what is in this packet to the message string without the end_detection_byte
 			message.addToMessage(bufferReceive_inString.substring(1));
 
@@ -81,7 +75,7 @@ public class DatagramCommunication {
 		return message;
 	}
 
-	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants){
+	public static ArrayList<CommunicationMessage> sendAndRetreivedMessagesToMultipleProc(String message, DatagramSocket s, ArrayList<Integer> pids,ParticipantList participants) throws IOException{
 		ArrayList<CommunicationMessage> responses = new ArrayList<CommunicationMessage>();
 		int port = 0;
 		InetAddress ip = null;
@@ -168,7 +162,7 @@ public class DatagramCommunication {
 		}
 		return result;
 	}
-	
+
 	public static InetAddress getOurBroadcastAddressOnWlan() throws Exception {
 		byte[] ourIp = getOurAddressOnWlan().getAddress();
 		ourIp[ourIp.length-1] = (byte) 255;
