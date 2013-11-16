@@ -132,7 +132,7 @@ public class Processus {
 			System.out.println(participants);
 		} catch (SocketTimeoutException e) {
 			result = false;
-			System.out.println("In Processus : in retrieveParticipantsFromFirst : First did not answer in time.");
+			System.out.println("In Processus "+ pid +": retrieveParticipantsFromFirst : First did not answer in time.");
 		}
 
 		this.socket.setSoTimeout(0);
@@ -281,6 +281,7 @@ public class Processus {
 		String[] result = new String[data.length-1];
 		for (int i=0; i<result.length; i++) {
 			result[i] = data[i];
+			System.out.println("\t\t\t"+this.pid+" DATA["+i+"]="+data[i]);
 		}
 		return result;
 	}
