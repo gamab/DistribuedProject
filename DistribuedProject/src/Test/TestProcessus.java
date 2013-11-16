@@ -24,8 +24,8 @@ public class TestProcessus {
 			//		System.out.println("############################");
 			//		testProcessus_3();
 			//		System.out.println("############################");
-//						testProcessus_4();
-//						System.out.println("############################");
+						testProcessus_4();
+						System.out.println("############################");
 			//		testProcessus_5();
 			//		System.out.println("############################");
 			//		testProcessus_6();

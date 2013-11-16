@@ -1,5 +1,6 @@
 package Test;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -38,7 +39,7 @@ public class TestDatagramCommunicationThread2 extends Thread {
 			System.out.println("TestDatagramCommunicationThread2 : messageToSend = " + messageToSend);
 			DatagramCommunication.sendMessage(messageToSend, s2, messageRead.getIpOrigin(),messageRead.getPortOrigin() );
 			s2.close();
-		} catch (SocketException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

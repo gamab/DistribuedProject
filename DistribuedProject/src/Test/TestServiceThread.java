@@ -1,6 +1,7 @@
 package Test;
 
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ import Sources.LogicalClock;
 import Sources.ServiceThread;
 
 public class TestServiceThread {
-	public static void runTest() {
+	public static void runTest() throws Exception {
 		System.out.println("########################");
 		System.out.println("## TEST SERVICETHREAD ##");
 		System.out.println("########################");
@@ -55,7 +56,7 @@ public class TestServiceThread {
 		System.out.println("############################");
 	}
 
-	public static ServiceThread buildServiceThread(DatagramSocket s) {
+	public static ServiceThread buildServiceThread(DatagramSocket s) throws Exception {
 		CRWaitingList crWaitingList1 = new CRWaitingList();
 		CRWaitingListCell cell1 = new CRWaitingListCell(1900,20);
 		CRWaitingListCell cell2 = new CRWaitingListCell(1910,22);
@@ -76,10 +77,11 @@ public class TestServiceThread {
 		ArrayList<String> resource2 = new ArrayList<String>();
 		resource2.add("A2");
 		resource2.add("B3");
-
+		InetAddress ip = DatagramCommunication.getOurAddressOnWlan();
+		InetAddress ip2 = DatagramCommunication.getOurAddressOnWlan();
 		ParticipantList participants = new ParticipantList();
-		Participant p1 = new Participant(1900, s.getLocalPort(),resource1);
-		Participant p2 = new Participant(1910, 4923,resource2);
+		Participant p1 = new Participant(1900, s.getLocalPort(),ip,resource1);
+		Participant p2 = new Participant(1910, 4923,ip2,resource2);
 		participants.add(p1);
 		participants.add(p2);
 
@@ -90,7 +92,7 @@ public class TestServiceThread {
 		return service;	
 	}
 
-	public static void testCRWaitingList_1() {
+	public static void testCRWaitingList_1() throws Exception {
 		System.out.println("Test n°1");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_RESOURCE 1 posible");
@@ -125,7 +127,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_2() {
+	public static void testCRWaitingList_2() throws Exception {
 		System.out.println("Test n°2");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_RESOURCE imposible");
@@ -160,7 +162,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_3() {
+	public static void testCRWaitingList_3() throws Exception {
 		System.out.println("Test n°3");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_RESOURCE 2 posibles");
@@ -199,7 +201,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_4() {
+	public static void testCRWaitingList_4() throws Exception {
 		System.out.println("Test n°4");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_RESOURCE 2 posibles from two different sources.\n\t\tIt allows us to see if the service thread is setting is clock properly");
@@ -239,7 +241,7 @@ public class TestServiceThread {
 	}
 
 
-	public static void testCRWaitingList_5() {
+	public static void testCRWaitingList_5() throws Exception {
 		System.out.println("Test n°5");
 		System.out.println("Description : Test");
 		System.out.println("Description : RELEASE_RESOURCE 1 posible");
@@ -275,7 +277,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_6() {
+	public static void testCRWaitingList_6() throws Exception {
 		System.out.println("Test n°6");
 		System.out.println("Description : Test");
 		System.out.println("Description : RELEASE_RESOURCE 1 imposible");
@@ -311,7 +313,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_7() {
+	public static void testCRWaitingList_7() throws Exception {
 		System.out.println("Test n°7");
 		System.out.println("Description : Test");
 		System.out.println("Description : JOIN posible");
@@ -324,7 +326,8 @@ public class TestServiceThread {
 			ServiceThread serviceT = buildServiceThread(serviceSocket);
 			serviceT.start();
 			Participant participant ;
-			participant = new Participant(1902,24932);
+			InetAddress ip = DatagramCommunication.getOurAddressOnWlan();
+			participant = new Participant(1902,24932, ip);
 			participant.addToResourcesList("A8");
 			participant.addToResourcesList("B9");
 			participant.addToResourcesList("C10");
@@ -352,7 +355,7 @@ public class TestServiceThread {
 			e.printStackTrace();
 		}
 	}
-	public static void testCRWaitingList_8() {
+	public static void testCRWaitingList_8() throws Exception {
 		System.out.println("Test n°8");
 		System.out.println("Description : Test");
 		System.out.println("Description : JOIN imposible");
@@ -388,7 +391,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_9() {
+	public static void testCRWaitingList_9() throws Exception {
 		System.out.println("Test n°9");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_PARTICIPANTS posible");
@@ -424,7 +427,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_10() {
+	public static void testCRWaitingList_10() throws Exception {
 		System.out.println("Test n°10");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_PARTICIPANTS posible after a JOIN.\n\t\tTo check if the join worked");
@@ -437,7 +440,8 @@ public class TestServiceThread {
 			ServiceThread serviceT = buildServiceThread(serviceSocket);
 			serviceT.start();
 			Participant participant ;
-			participant = new Participant(1902,24932);
+			InetAddress ip = DatagramCommunication.getOurAddressOnWlan();
+			participant = new Participant(1902,24932,ip);
 			participant.addToResourcesList("A8");
 			participant.addToResourcesList("B9");
 			participant.addToResourcesList("C10");
@@ -469,7 +473,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_11() {
+	public static void testCRWaitingList_11() throws Exception {
 		System.out.println("Test n°11");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_CRITICAL_REGION posible");
@@ -508,7 +512,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_12() {
+	public static void testCRWaitingList_12() throws Exception {
 		System.out.println("Test n°12");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_CRITICAL_REGION imposible because it is the third of two CR");
@@ -547,7 +551,7 @@ public class TestServiceThread {
 		}
 	}
 	
-	public static void testCRWaitingList_13() {
+	public static void testCRWaitingList_13() throws Exception {
 		System.out.println("Test n°13");
 		System.out.println("Description : Test");
 		System.out.println("Description : GET_CRITICAL_REGION imposible because we are not giving a proper WaitingListCell");
@@ -584,7 +588,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_14() {
+	public static void testCRWaitingList_14() throws Exception {
 		System.out.println("Test n°14");
 		System.out.println("Description : Test");
 		System.out.println("Description : FREE_CRITICAL_REGION posible (we add a cell and then delete it)");
@@ -627,7 +631,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_15() {
+	public static void testCRWaitingList_15() throws Exception {
 		System.out.println("Test n°15");
 		System.out.println("Description : Test");
 		System.out.println("Description : FREE_CRITICAL_REGION imposible because it is the third of two CR");
@@ -670,7 +674,7 @@ public class TestServiceThread {
 		}
 	}
 	
-	public static void testCRWaitingList_16() {
+	public static void testCRWaitingList_16() throws Exception {
 		System.out.println("Test n°16");
 		System.out.println("Description : Test");
 		System.out.println("Description : FREE_CRITICAL_REGION imposible because we are not giving a proper WaitingListCell");
@@ -707,7 +711,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_20() {
+	public static void testCRWaitingList_20() throws Exception {
 		System.out.println("Test n°20");
 		System.out.println("Description : Test");
 		System.out.println("Description : Imposible request with good clock");
@@ -743,7 +747,7 @@ public class TestServiceThread {
 		}
 	}
 
-	public static void testCRWaitingList_21() {
+	public static void testCRWaitingList_21() throws Exception {
 		System.out.println("Test n°21");
 		System.out.println("Description : Test");
 		System.out.println("Description : Request without clock");
