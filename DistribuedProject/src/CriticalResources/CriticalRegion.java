@@ -46,10 +46,11 @@ public abstract class CriticalRegion {
 		// if all the message retrieved say OK then you can add the proc to the waiting list of the CR
 		// else we ask again
 		for(int i = 0; i < messages.size(); i++){
-			if (proc.retrieveMessageWithoutClockFromMessage(messages.get(i)).equals("OK")){
+			String[] messagesWithoutClock = proc.retrieveMessageWithoutClockFromMessage(messages.get(i));
+			if (messagesWithoutClock[0].equals("OK")){
 				// System.out.println("In CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion : resonse := "+ i);
 
-			} else if (proc.retrieveMessageWithoutClockFromMessage(messages.get(i)).equals("BAD_FORMAT") ){
+			} else if (messagesWithoutClock[0].equals("BAD_FORMAT") ){
 				throw new Exception("In CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion :  all procs didn't send OK to GET_CRITICAL_REGION");
 			} 
 		}
@@ -81,7 +82,7 @@ public abstract class CriticalRegion {
 		if (mess[0].equals("OK_IT_IS_YOURS")){
 			gotResource = true;
 		} else {
-			throw new Exception();
+			throw new Exception("In CriticalRegion of proc : " + proc.myPid() + ", getResource:  all procs didn't send OK to GET_RESOURCE");
 		}
 		return gotResource;
 	}
@@ -105,7 +106,7 @@ public abstract class CriticalRegion {
 		if (mess[0].equals("OK_IT_IS_NOT_YOURS_ANYMORE")){
 			letResourceGo = true;
 		} else {
-			throw new Exception();
+			throw new Exception("In CriticalRegion of proc : " + proc.myPid() + ", freeResource:  all procs didn't send OK to FREE_RESOURCE");
 		}
 		return letResourceGo;
 	}
@@ -127,10 +128,11 @@ public abstract class CriticalRegion {
 		// if all the message retrieved say OK then you delete the proc of the waiting list of the CR
 		// else we ask again
 		for(int i = 0; i < messages.size(); i++){
-			if (proc.retrieveMessageWithoutClockFromMessage(messages.get(i)).equals("OK")){
+			String[] messagesWithoutClock = proc.retrieveMessageWithoutClockFromMessage(messages.get(i));
+			if (messagesWithoutClock[0].equals("OK")){
 				// System.out.println("In CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : resonse := "+ i);
 
-			} else if (proc.retrieveMessageWithoutClockFromMessage(messages.get(i)).equals("BAD_FORMAT") ){
+			} else if (messagesWithoutClock[0].equals("BAD_FORMAT") ){
 				throw new Exception("In CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : all procs didn't send OK to FREE_CRITICAL_REGION");
 			}
 		}

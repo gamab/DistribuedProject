@@ -283,7 +283,7 @@ public class Processus {
 		String[] result = new String[data.length-1];
 		for (int i=0; i<result.length; i++) {
 			result[i] = data[i];
-			System.out.println("\t\t\t"+this.pid+" DATA["+i+"]="+data[i]);
+			//System.out.println("\t\t\tIn Processus : in retrieveMessageWithoutClockFromMessage :"+this.pid+" DATA["+i+"]="+data[i]);
 		}
 		return result;
 	}
