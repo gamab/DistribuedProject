@@ -1,5 +1,6 @@
 package Sources;
 
+import java.io.IOException;
 import java.net.DatagramSocket;
 
 import CriticalResources.CRWaitingList;
@@ -35,12 +36,18 @@ public class ServiceThread extends Thread {
 		CommunicationMessage request = new CommunicationMessage();
 		String answer = new String();
 		while(true) {			
-			request = DatagramCommunication.retrieveMessage(serviceSocket);
-			System.out.println("In ServiceThread of proc : "+ this.pid + ", in run : Received " + request.getMessage());
-			answer = treatRequest(request.getMessage());
+			try {
+				request = DatagramCommunication.retrieveMessage(serviceSocket);
+				System.out.println("In ServiceThread of proc : "+ this.pid + ", in run : Received " + request.getMessage());
+				answer = treatRequest(request.getMessage());
+				this.clock.incClock();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				answer = "COULD_NOT_RETRIEVE_MESSAGE<<"+this.clock.getClock()+"<<";
+				e.printStackTrace();
+			}
 			DatagramCommunication.sendMessage(answer,serviceSocket,request.getIpOrigin(),request.getPortOrigin());
 			System.out.println("In ServiceThread of proc : "+ this.pid + ", in run : Answered " + answer);
-			this.clock.incClock();
 		}
 	}
 
