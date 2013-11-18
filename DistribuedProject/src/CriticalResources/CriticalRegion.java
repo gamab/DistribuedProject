@@ -1,3 +1,5 @@
+//DESCRIPTION : CriticalRegion represents a critical region we can enter it, execute it and release it
+
 package CriticalResources;
 
 import java.util.ArrayList;
@@ -6,7 +8,6 @@ import DatagramCommunication.CommunicationMessage;
 import Sources.Processus;
 
 
-// represent a critical region we can enter it, execute it and release it
 public abstract class CriticalRegion {
 
 	protected Processus proc;

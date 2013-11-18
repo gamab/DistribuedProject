@@ -1,8 +1,11 @@
+//DESCRIPTION : Participant represents : 
+// 				all the information that other processes need to know on a given process
+//				to be able to communicate with it and ask it for its resources or for CR access
+
 package Participant;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-// a participant all the information that other processes need to know on a given process
 
 public class Participant {
 	InetAddress ip;
