@@ -321,7 +321,7 @@ public class TestCRWaitingList {
 		boolean resConvertion = list.fromString(listString);
 		CRWaitingListCell cell = new CRWaitingListCell(1903,30);
 		
-		String attendu = "1904//30 in position null";
+		String attendu = "1903//30 in position null";
 		String obtenu = cell.toString() + " in position " + list.getPosition(cell);
 		System.out.println("Attendu : " + attendu);
 		System.out.println("Obtenu  : " + obtenu);

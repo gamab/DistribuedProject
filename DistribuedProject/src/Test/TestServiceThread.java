@@ -401,11 +401,12 @@ public class TestServiceThread {
 		try {
 			serviceSocket = new DatagramSocket(0);
 			s1 = new DatagramSocket(0);
+			InetAddress ip = DatagramCommunication.getOurAddressOnWlan();
 			ServiceThread serviceT = buildServiceThread(serviceSocket);
 			serviceT.start();
 			String message1 = "GET_PARTICIPANTS"+"<<20<<";
 			DatagramCommunication.sendMessage(message1, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
-			String attendu = "PARTICIPANTS<<1900//"+ serviceSocket.getLocalPort() +"//A1;;B2:::1910//4923//A2;;B3<<21<<";
+			String attendu = "PARTICIPANTS<<1900//"+ serviceSocket.getLocalPort()+"//"+ip.getHostAddress()+"//A1;;B2:::1910//4923//"+ip.getHostAddress()+"//A2;;B3<<21<<";
 			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
 
 			System.out.println("Attendu : " + attendu);
@@ -451,7 +452,7 @@ public class TestServiceThread {
 			DatagramCommunication.retrieveMessage(s1);
 			String message2 = "GET_PARTICIPANTS"+"<<22<<";
 			DatagramCommunication.sendMessage(message2, s1, serviceSocket.getLocalAddress(), serviceSocket.getLocalPort());
-			String attendu = "PARTICIPANTS<<1900//"+ serviceSocket.getLocalPort() +"//A1;;B2:::1910//4923//A2;;B3:::1902//24932//A8;;B9;;C10;;D11<<23<<";
+			String attendu = "PARTICIPANTS<<1900//"+ serviceSocket.getLocalPort() + "//" + ip.getHostAddress() +"//A1;;B2:::1910//4923//"+ ip.getHostAddress() + "//A2;;B3:::1902//24932//"+ ip.getHostAddress() + "//A8;;B9;;C10;;D11<<23<<";
 			String obtenu =  DatagramCommunication.retrieveMessage(s1).getMessage();
 
 			System.out.println("Attendu : " + attendu);
