@@ -2,7 +2,7 @@ package Participant;
 
 import java.util.ArrayList;
 
-
+// contains the list of the participant which are participating to the program 
 public class ParticipantList extends ArrayList<Participant> {
 
 	public ParticipantList(){
