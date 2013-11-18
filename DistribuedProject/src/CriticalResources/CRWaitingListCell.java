@@ -1,3 +1,8 @@
+//DESCRIPTION : CRWaitingListCell represents a cell of a WaitingList of a Critical Region
+//				It contains the pid of the process who wants to access a CR
+//				And the clock at which he asked for the CR
+//				Implements Comparable to able the WaitingList to be sorted.
+
 package CriticalResources;
 import java.util.Comparator;
 

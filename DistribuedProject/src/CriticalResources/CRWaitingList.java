@@ -1,3 +1,5 @@
+//DESCRIPTION : CRWaitingList represents a waiting list for a given CriticalRegion
+
 package CriticalResources;
 
 import java.util.ArrayList;
