@@ -1,3 +1,5 @@
+//DESCRIPTION : DatagramCommunication represents an abstraction layer to facilitate communications using UDP
+
 package DatagramCommunication;
 
 import java.io.IOException;

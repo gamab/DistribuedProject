@@ -1,3 +1,6 @@
+//DESCRIPTION : CommunicationMessage contains all important information on a message :
+//				Where it is coming from and what it says
+
 package DatagramCommunication;
 
 import java.net.InetAddress;
