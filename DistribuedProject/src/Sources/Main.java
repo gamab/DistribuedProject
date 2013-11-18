@@ -9,21 +9,10 @@ import Test.TestProcessus;
 import Test.TestServiceThread;
 
 
-
+// Allows user to create 3 process with the pid of his choice
 public class Main {
 
 	public static void main(String[] args) {
-//				TestParticipant.runTest();
-//				TestCRWaitingListCell.runTest();
-//				TestCRWaitingList.runTest();
-//				TestDatagramCommunication.runTest();
-//				try {
-//					TestServiceThread.runTest();
-//				} catch (Exception e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//				TestProcessus.runTest();
 		Scanner sc = new Scanner(System.in);
 		char r = 'N'; 
 		int[] pid = new int[3];
@@ -35,7 +24,7 @@ public class Main {
 			}
 			r = sc.nextLine().charAt(0);
 			if (r == (byte)'y') {
-				System.out.print("What is the pid of the programm ? => pid = ");
+				System.out.print("What is the pid of the programm ? (if 0 : Random) => pid = ");
 				pid[i] = sc.nextInt();
 				quitEndOfLine(sc);
 				pid[i] = Math.abs(pid[i]);
@@ -66,5 +55,19 @@ public class Main {
 	
 	public static void quitEndOfLine(Scanner sc) {
 		sc.nextLine();
+	}
+	
+	public static void runTests() {
+		TestParticipant.runTest();
+		TestCRWaitingListCell.runTest();
+		TestCRWaitingList.runTest();
+		TestDatagramCommunication.runTest();
+		try {
+			TestServiceThread.runTest();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		TestProcessus.runTest();
 	}
 }

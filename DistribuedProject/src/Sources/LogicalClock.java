@@ -1,3 +1,5 @@
+//DESCRIPTION : LogicalClock represents the Lamport Clock
+
 package Sources;
 
 public class LogicalClock {

@@ -1,3 +1,8 @@
+//DESCRIPTION : Processus represents one of the process. Each process is identified by a PID.
+//				Each process has resources to share and wants to access a critical region.
+//				Also each process can listen to the others processes request thanks to his serviceThread.
+//				And can talk to others thanks to a datagram socket
+
 package Sources;
 
 import java.io.IOException;

@@ -1,3 +1,7 @@
+//DESCRIPTION : ServiceThread represents the listening part of a Process.
+//				It attends each request it receives and sends the adequate answer
+
+
 package Sources;
 
 import java.io.IOException;
