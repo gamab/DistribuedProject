@@ -216,15 +216,10 @@ public class Processus {
 	public int my_servicePort(){
 		return servicePort;
 	}
-
+	
 	public LogicalClock getClock(){
 		return this.clock;
 	}
-
-	public void setServicePort(int servicePort){
-		this.servicePort = servicePort;
-	}
-
 
 	//Goes in the Participants list and retrieves all pids.
 	public ArrayList<Integer> getAllPidsButMine() {
@@ -278,7 +273,7 @@ public class Processus {
 	}
 
 	//Retrieve only the message out of the CommunicationMessage
-	public String[] retrieveMessageWithoutClockFromMessage(CommunicationMessage message) {
+	public String[] retrieveMessageComponentsWithoutClockFromMessage(CommunicationMessage message) {
 		String[] data = message.getMessage().split("<<");
 		String[] result = new String[data.length-1];
 		for (int i=0; i<result.length; i++) {

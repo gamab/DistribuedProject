@@ -46,7 +46,7 @@ public abstract class CriticalRegion {
 		// if all the message retrieved say OK then you can add the proc to the waiting list of the CR
 		// else we ask again
 		for(int i = 0; i < messages.size(); i++){
-			String[] messagesWithoutClock = proc.retrieveMessageWithoutClockFromMessage(messages.get(i));
+			String[] messagesWithoutClock = proc.retrieveMessageComponentsWithoutClockFromMessage(messages.get(i));
 			if (messagesWithoutClock[0].equals("OK")){
 				// System.out.println("In CriticalRegion of proc : " + proc.myPid() + ", getCriticalRegion : resonse := "+ i);
 
@@ -78,7 +78,7 @@ public abstract class CriticalRegion {
 		proc.retrieveClockFromMessageList(message);
 		//System.out.println("CriticalRegion of proc : " + proc.myPid() + ", getResource : Clock after setting " + proc.getClock().getClock());
 		// find the message and look if it's what we are expecting for
-		String[] mess = proc.retrieveMessageWithoutClockFromMessage(message.get(0));
+		String[] mess = proc.retrieveMessageComponentsWithoutClockFromMessage(message.get(0));
 		if (mess[0].equals("OK_IT_IS_YOURS")){
 			gotResource = true;
 		} else {
@@ -102,7 +102,7 @@ public abstract class CriticalRegion {
 		proc.retrieveClockFromMessageList(message);
 		//System.out.println("CriticalRegion of proc : " + proc.myPid() + ", freeResources : Clock after setting " + proc.getClock().getClock());
 		// find the message and look if it's what we are expecting for
-		String[] mess = proc.retrieveMessageWithoutClockFromMessage(message.get(0));
+		String[] mess = proc.retrieveMessageComponentsWithoutClockFromMessage(message.get(0));
 		if (mess[0].equals("OK_IT_IS_NOT_YOURS_ANYMORE")){
 			letResourceGo = true;
 		} else {
@@ -128,7 +128,7 @@ public abstract class CriticalRegion {
 		// if all the message retrieved say OK then you delete the proc of the waiting list of the CR
 		// else we ask again
 		for(int i = 0; i < messages.size(); i++){
-			String[] messagesWithoutClock = proc.retrieveMessageWithoutClockFromMessage(messages.get(i));
+			String[] messagesWithoutClock = proc.retrieveMessageComponentsWithoutClockFromMessage(messages.get(i));
 			if (messagesWithoutClock[0].equals("OK")){
 				// System.out.println("In CriticalRegion of proc : " + proc.myPid() + ", freeCriticalRegion : resonse := "+ i);
 
